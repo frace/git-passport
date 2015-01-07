@@ -16,15 +16,15 @@ Add the path to the template directory into your `~/.gitconfig`:
 
 ```
 [init]
-templatedir = ~/.git/templates
+    templatedir = ~/.git/templates
 ```
 
 Afterwards each `git init` or `git clone` command will distribute
 the hook into a new repository.
-If you want to apply the hook to already exisiting repos then just run a git
-init inside the repository in order to reinitialize it.
+If you want to apply the hook to already exisiting repos then just run
+`git init` inside the repository in order to reinitialize it.
 
-On the first run `git-passport.py` generates a sample confuguration file inside
+On the first run `git-passport.py` generates a sample configuration file inside
 your home directory:
 
 1. `cd ~/.git/templates/hooks/git-passport`
