@@ -31,8 +31,21 @@ def config_generate(filename):
     preset["Git ID 1"]["name"] = "name_1"
     preset["Git ID 1"]["service"] = "gitlab.com"
 
-    with open(filename, "w") as configfile:
-        preset.write(configfile)
+    if not os.path.exists(filename):
+        try:
+            msg = """
+                No configuration file found.
+                Generating a sample configuration file.
+            """
+
+            print(textwrap.dedent(msg).strip())
+            with open(filename, "w") as configfile:
+                preset.write(configfile)
+            sys.exit("\n~Done~\n")
+
+        except Exception as error:
+            print(error)
+            sys.exit("\n~Quitting~\n")
 
 
 def config_read(filename):
@@ -292,9 +305,7 @@ def no_url_exists(config, url):
 # ........................................................................ Glue
 def main():
     config_file = os.path.expanduser("~/.git_passport")
-
-    if not os.path.exists(config_file):
-        config_generate(config_file)
+    config_generate(config_file)
 
     config = config_read(config_file)
     config_validate(config)
