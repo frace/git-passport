@@ -200,7 +200,7 @@ def print_choice(choice):
             )
         else:
             msg = """
-                ~Local ID: [%s]
+                ~Passport ID: [%s]
                     . User: %s
                     . Mail: %s
                     . Service: %s
