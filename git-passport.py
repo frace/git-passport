@@ -235,7 +235,7 @@ def identity_exists(config, email, name, url):
 
     msg = """
         ~Intermission~
-            Current local ID is already set:
+            Active Passport ID:
             . User: %s
             . Mail: %s
             . Remote: %s
