@@ -1,5 +1,5 @@
 # What is it?
-A git hook which lets us interactively choose an ID from a predefined set of
+A Git pre-commit hook which lets us select a local ID from a predefined set of
 git identities.
 
 
