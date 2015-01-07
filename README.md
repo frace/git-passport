@@ -1,4 +1,4 @@
 2DO
-    Write README
-    Add meaningful comments
-    Add LICENSE
++ Write README
++ Add meaningful comments
++ Add LICENSE
