@@ -314,7 +314,7 @@ def main():
         pointer = get_user_input(candidates.keys())
         git_set_id(config, candidates[pointer]["email"], "email")
         git_set_id(config, candidates[pointer]["name"], "name")
-        sys.exit("\n~Done~\n")
+        print("\n~Done~\n")
 
 
 if __name__ == "__main__":
