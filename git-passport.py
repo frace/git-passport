@@ -168,6 +168,8 @@ def git_set_id(config, data, property):
 # ............................................................ Helper functions
 def get_user_input(pool):
     while True:
+        # http://stackoverflow.com/questions/7437261/how-is-it-possible-to-use-raw-input-in-a-python-git-hook
+        sys.stdin = open("/dev/tty")
         selected = input("» Please select a valid [ID] or type «q» to quit: ")
 
         try:
