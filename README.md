@@ -29,12 +29,15 @@ If you want to apply the hook to already exisiting repos then just run
 On the first run `git-passport.py` generates a sample configuration file inside
 your home directory:
 
-1. `cd ~/.git/templates/hooks/git-passport`
-2. Generate a sample configuration file: `./git-passport.py`
+```
+>:cd ~/.git/templates/hooks/git-passport
+>:./git-passport.py
+>:_
+```
 
 The configuration file is rather self-explanatory:
 ```
-cat ~/.git_passport
+>:cat ~/.git_passport
 
 [General]
 enable_hook = True
@@ -49,6 +52,8 @@ service = github.com
 email = email_1@example.com
 name = name_1
 service = gitlab.com
+
+>:_
 ```
 
 Adjust the existing sections and add as many git IDs as you like by following
