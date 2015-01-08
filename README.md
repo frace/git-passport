@@ -42,7 +42,6 @@ Generating a sample configuration file.
 The configuration file is rather self-explanatory:
 ```
 >:cat ~/.git_passport
-
 [General]
 enable_hook = True
 sleep_duration = 1
