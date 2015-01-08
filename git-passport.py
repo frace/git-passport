@@ -157,7 +157,7 @@ def git_get_id(config, scope, property):
         return git_id.replace("\n", "")
 
     except Exception as error:
-        return error
+        raise error
 
 
 def git_get_url():
@@ -180,7 +180,7 @@ def git_get_url():
         return git_url.replace("\n", "")
 
     except Exception as error:
-        return error
+        raise error
 
 
 def git_set_id(config, data, property):
@@ -204,7 +204,7 @@ def git_set_id(config, data, property):
         ], stdout=subprocess.PIPE)
 
     except Exception as error:
-        return error
+        raise error
 
 
 # ............................................................ Helper functions
