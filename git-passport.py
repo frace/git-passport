@@ -14,6 +14,12 @@ import urllib.parse
 
 # ............................................................ Config functions
 def config_generate(filename):
+    """ Generate a configuration file containing sample data inside the home
+        directory if none exists yet.
+
+        Args:
+            filename (str): The complete `filepath` of the configuration file
+    """
     preset = configparser.ConfigParser()
 
     preset["General"] = {}
@@ -49,16 +55,28 @@ def config_generate(filename):
 
 
 def config_read(filename):
+    """ Read a provided configuration file and «import» allowed sections and
+        their keys/values into a dictionary.
+
+        Args:
+            filename (str): The complete `filepath` of the configuration file
+
+        Returns:
+            config (dict): Contains all allowed configuration sections
+    """
     data = configparser.ConfigParser()
     data.read(filename)
 
+    # Match an arbitrary number of sections starting with pattern
     pattern = "Git ID"
     matches = []
 
+    # Add matching sections to a temporary list
     for section in data.items():
         if pattern in section[0]:
             matches.append(dict(section[1]))
 
+    # Construct a custom dict containing allowed sections
     config = dict(data.items("General"), git_local_id={})
     config["git_local_id"] = dict(enumerate(matches))
 
@@ -66,6 +84,19 @@ def config_read(filename):
 
 
 def config_validate(config):
+    """ Validate and convert certain keys and values of a given dictionary
+        containing a set of configuration options. If unexpected values are
+        found we quit the script and notify the user what went wrong.
+
+        Since ``ConfigParser`` only accepts strings when setting up a default
+        config it is necessary to convert some values to numbers and boolean.
+
+        Args:
+            config (dict): Contains all allowed configuration sections
+
+        Returns:
+            config (dict): Contains valid and converted configuration options
+    """
     for key, value in config.items():
         if key == "enable_hook" or key == "devel_debug":
             if value == "True":
@@ -83,6 +114,7 @@ def config_validate(config):
                 msg = "E > Settings > %s: Expecting a number." % (key)
                 sys.exit(msg)
 
+        # Here the values could really be anything...
         elif key == "git_local_id":
             pass
 
@@ -93,8 +125,17 @@ def config_validate(config):
 
 # ............................................................... Git functions
 def git_get_id(config, scope, property):
-    """Returns the global or local git ID (email and username)."""
+    """ Get the email address or username of the global or local Git ID.
 
+        Args:
+            config (dict): Contains validated configuration options
+            scope (str): Search inside a `global` or `local` scope
+            property (str): Type of `email` or `name`
+
+        Returns:
+            git_id (str): A name or email address
+            error (str): Exception
+    """
     if config["devel_debug"]:
         valid_args = ("global", "local", "email", "name")
         fname = sys._getframe().f_code.co_name
@@ -132,8 +173,12 @@ def git_get_id(config, scope, property):
 
 
 def git_get_url():
-    """ Returns the local remote.origin.url of a git repository """
+    """ Get the local remote.origin.url of a Git repository.
 
+        Returns:
+            git_url (str): The local and active remote.origin.url
+            error (str): Exception
+    """
     try:
         git_process = subprocess.Popen([
             "git",
@@ -151,8 +196,16 @@ def git_get_url():
 
 
 def git_set_id(config, data, property):
-    """Sets the local ID (email and username) of a local git repository."""
+    """ Set the email address or username as a local Git ID for a repository.
 
+        Args:
+            config (dict): Contains validated configuration options
+            data (str): A name or email address
+            property (str): Type of `email` or `name`
+
+        Returns:
+            error (str): Exception
+    """
     if config["devel_debug"]:
         valid_args = ("email", "name")
         fname = sys._getframe().f_code.co_name
@@ -180,6 +233,16 @@ def git_set_id(config, data, property):
 
 # ............................................................ Helper functions
 def get_user_input(pool):
+    """ Prompt a user to select a number from a list of numbers representing
+        available Git IDs. Optionally the user can choose `q` to quit the
+        selection process.
+
+        Args:
+            pool (list): A list of numbers representing available Git IDs
+
+        Returns:
+            selected (int): A number representing a Git ID chosen by a user
+    """
     while True:
         # http://stackoverflow.com/questions/7437261/how-is-it-possible-to-use-raw-input-in-a-python-git-hook
         sys.stdin = open("/dev/tty")
@@ -199,6 +262,13 @@ def get_user_input(pool):
 
 
 def print_choice(choice):
+    """ Before showing the actual prompt by calling `get_user_input()` print a
+        list of available Git IDs containing properties ID, «scope», name,
+        email and service.
+
+        Args:
+            choice (dict): Contains a list of preselected Git ID candidates
+    """
     for key, value in choice.items():
         if value.get("flag") == "global":
             msg = """
@@ -227,6 +297,13 @@ def print_choice(choice):
 
 
 def add_global_id(config, target):
+    """ Adds the global Git ID to a dictionary containing potential preselected
+        candidates.
+
+        Args:
+            config (dict): Contains validated configuration options
+            target (dict): Contains preselected local Git IDs
+    """
     global_email = git_get_id(config, "global", "email")
     global_name = git_get_id(config, "global", "name")
     local_id = config["git_local_id"]
@@ -241,6 +318,14 @@ def add_global_id(config, target):
 
 # .............................................................. Implementation
 def identity_exists(config, email, name, url):
+    """ Prints an existing ID of a local gitconfig.
+
+        Args:
+            config (dict): Contains validated configuration options
+            email (str): An email address
+            name (str): A name
+            url (str): A remote.origin.url
+    """
     duration = config["sleep_duration"]
 
     if not url:
@@ -258,10 +343,23 @@ def identity_exists(config, email, name, url):
 
 
 def url_exists(config, url):
+    """ If a local gitconfig contains a remote.origin.url add all user defined
+        Git IDs matching remote.origin.url as a candidate. However if there is
+        not a single match then add all available user defined Git IDs and the
+        global Git ID as candidates.
+
+        Args:
+            config (dict): Contains validated configuration options
+            url (str): A remote.origin.url
+
+        Returns:
+            candidates (dict): Contains preselected Git ID candidates
+    """
     candidates = {}
     local_id = config["git_local_id"]
     netloc = urllib.parse.urlparse(url)[1]
 
+    # Let's see if user defined IDs match remote.origin.url
     for key, value in local_id.items():
         if value.get("service") == netloc:
             candidates[key] = value
@@ -289,6 +387,17 @@ def url_exists(config, url):
 
 
 def no_url_exists(config, url):
+    """ If a local gitconfig does not contain a remote.origin.url add
+        all available user defined Git IDs and the global Git ID as
+        candidates.
+
+        Args:
+            config (dict): Contains validated configuration options
+            url (str): A remote.origin.url
+
+        Returns:
+            candidates (dict): Contains preselected Git ID candidates
+    """
     candidates = {}
     candidates = config["git_local_id"]
     msg = """
