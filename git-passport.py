@@ -73,16 +73,17 @@ def config_read(filename):
 
     # Match an arbitrary number of sections starting with pattern
     pattern = "Git ID"
-    matches = []
 
-    # Add matching sections to a temporary list
-    for section in data.items():
-        if pattern in section[0]:
-            matches.append(dict(section[1]))
+    # A generator to filter matching sections
+    def generate_matches():
+        for section in data.items():
+            if pattern in section[0]:
+                yield dict(section[1])
 
     # Construct a custom dict containing allowed sections
-    config = dict(data.items("General"), git_local_id={})
-    config["git_local_id"] = dict(enumerate(matches))
+    config = dict(data.items("General"))
+    config["git_local_id"] = {}
+    config["git_local_id"] = dict(enumerate(generate_matches()))
 
     return config
 
