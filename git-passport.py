@@ -217,24 +217,24 @@ def get_user_input(pool):
             pool (list): A list of numbers representing available Git IDs
 
         Returns:
-            selected (int): A number representing a Git ID chosen by a user
+            selection (int): A number representing a Git ID chosen by a user
     """
     while True:
         # http://stackoverflow.com/questions/7437261/how-is-it-possible-to-use-raw-input-in-a-python-git-hook
         sys.stdin = open("/dev/tty")
-        selected = input("» Please select a valid [ID] or type «q» to quit: ")
+        selection = input("» Please select a valid [ID] or type «q» to quit: ")
 
         try:
-            selected = int(selected)
+            selection = int(selection)
         except ValueError:
-            if selected == "q":
+            if selection == "q":
                 sys.exit("\n~Quitting~\n")
             continue
 
-        if selected not in pool:
+        if selection not in pool:
             continue
         break
-    return selected
+    return selection
 
 
 def print_choice(choice):
@@ -285,11 +285,11 @@ def add_global_id(config, target):
     local_id = config["git_local_id"]
 
     if global_email and global_name:
-        pointer = len(local_id)
-        target[pointer] = {}
-        target[pointer]["email"] = global_email
-        target[pointer]["name"] = global_name
-        target[pointer]["flag"] = "global"
+        position = len(local_id)
+        target[position] = {}
+        target[position]["email"] = global_email
+        target[position]["name"] = global_name
+        target[position]["flag"] = "global"
 
 
 # .............................................................. Implementation
@@ -408,9 +408,9 @@ def main():
         else:
             candidates = no_url_exists(config, local_url)
 
-        pointer = get_user_input(candidates.keys())
-        git_set_id(config, candidates[pointer]["email"], "email")
-        git_set_id(config, candidates[pointer]["name"], "name")
+        selected_id = get_user_input(candidates.keys())
+        git_set_id(config, candidates[selected_id]["email"], "email")
+        git_set_id(config, candidates[selected_id]["name"], "name")
         print("\n~Done~\n")
 
 
