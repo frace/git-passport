@@ -330,14 +330,17 @@ def url_exists(config, url):
         Returns:
             candidates (dict): Contains preselected Git ID candidates
     """
-    candidates = {}
     local_id = config["git_local_id"]
     netloc = urllib.parse.urlparse(url)[1]
 
+    # A generator to filter matching sections:
     # Let's see if user defined IDs match remote.origin.url
-    for key, value in local_id.items():
-        if value.get("service") == netloc:
-            candidates[key] = value
+    def generate_candidates():
+        for key, value in local_id.items():
+            if value.get("service") == netloc:
+                yield (key, value)
+
+    candidates = dict(generate_candidates())
 
     if len(candidates) >= 1:
         msg = """
