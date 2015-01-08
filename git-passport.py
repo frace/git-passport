@@ -18,8 +18,8 @@ import urllib.parse
 
 
 # ............................................................ Config functions
-def config_generate(filename):
-    """ Generate a configuration file containing sample data inside the home
+def config_create(filename):
+    """ Create a configuration file containing sample data inside the home
         directory if none exists yet.
 
         Args:
@@ -389,7 +389,7 @@ def no_url_exists(config, url):
 # ........................................................................ Glue
 def main():
     config_file = os.path.expanduser("~/.git_passport")
-    config_generate(config_file)
+    config_create(config_file)
 
     config = config_validate(config_read(config_file))
 
