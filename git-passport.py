@@ -377,7 +377,6 @@ def no_url_exists(config, url):
         Returns:
             candidates (dict): Contains preselected Git ID candidates
     """
-    candidates = {}
     candidates = config["git_local_id"]
     msg = """
         ~Intermission~
