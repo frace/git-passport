@@ -55,7 +55,7 @@ def config_create(filename):
 
         except Exception as error:
             print(error)
-            sys.exit("\n~Quitting~")
+            raise sys.exit("\n~Quitting~")
 
 
 def config_read(filename):
@@ -110,14 +110,14 @@ def config_validate(config):
                 config[key] = False
             else:
                 msg = "E > Settings > %s: Expecting True or False." % (key)
-                sys.exit(msg)
+                raise sys.exit(msg)
 
         elif key == "sleep_duration":
             try:
                 config[key] = int(value)
             except ValueError:
                 msg = "E > Settings > %s: Expecting a number." % (key)
-                sys.exit(msg)
+                raise sys.exit(msg)
 
         # Here the values could really be anything...
         elif key == "git_local_id":
@@ -125,7 +125,7 @@ def config_validate(config):
 
         else:
             msg = "E > Settings > %s: Section/key unknown." % (key)
-            sys.exit(msg)
+            raise sys.exit(msg)
 
     return config
 
