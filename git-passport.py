@@ -29,7 +29,7 @@ def config_create(filename):
 
     preset["General"] = {}
     preset["General"]["enable_hook"] = "True"
-    preset["General"]["sleep_duration"] = "1"
+    preset["General"]["sleep_duration"] = "1.5"
 
     preset["Git ID 0"] = {}
     preset["Git ID 0"]["email"] = "email_0@example.com"
@@ -115,9 +115,9 @@ def config_validate(config):
 
         elif key == "sleep_duration":
             try:
-                config[key] = int(value)
+                config[key] = float(value)
             except ValueError:
-                msg = "E > Settings > %s: Expecting a number." % (key)
+                msg = "E > Settings > %s: Expecting float or number." % (key)
                 raise sys.exit(msg)
 
         # Here the values could really be anything...

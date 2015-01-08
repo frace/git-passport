@@ -44,7 +44,7 @@ The configuration file is rather self-explanatory:
 >:cat ~/.git_passport
 [General]
 enable_hook = True
-sleep_duration = 1
+sleep_duration = 1.5
 
 [Git ID 0]
 email = email_0@example.com
