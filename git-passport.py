@@ -74,7 +74,8 @@ def config_read(filename):
     # Match an arbitrary number of sections starting with pattern
     pattern = "Git ID"
 
-    # A generator to filter matching sections
+    # A generator to filter matching sections:
+    # Let's see if user defined config sections match a pattern
     def generate_matches():
         for section in data.items():
             if pattern in section[0]:
