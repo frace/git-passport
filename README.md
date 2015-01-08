@@ -36,7 +36,6 @@ cat ~/.git_passport
 
 [General]
 enable_hook = True
-devel_debug = False
 sleep_duration = 1
 
 [Git ID 0]
