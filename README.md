@@ -56,7 +56,6 @@ service = github.com
 email = email_1@example.com
 name = name_1
 service = gitlab.com
-
 >:_
 ```
 
