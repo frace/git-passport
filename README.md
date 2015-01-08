@@ -4,12 +4,14 @@ git identities.
 
 
 ## Get it!
-1. `mkdir -p ~/.git/templates/hooks`
-2. `cd ~/.git/templates/hooks`
-3. `git clone git://github.com/frace/git-passport.git`
-4. `chmod +x ./git-passport/git-passport.py`
-5. `ln -sf ./git-passport/git-passport.py ./pre-commit`
-
+```
+>:mkdir -p ~/.git/templates/hooks
+>:cd ~/.git/templates/hooks
+>:git clone git://github.com/frace/git-passport.git
+>:chmod +x ./git-passport/git-passport.py
+>:ln -sf ./git-passport/git-passport.py ./pre-commit
+>:_
+```
 
 ## Configuration
 Add the path to the template directory into your `~/.gitconfig`:
