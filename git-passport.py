@@ -122,6 +122,8 @@ def config_validate(config):
             msg = "E > Settings > %s: Section/key unknown." % (key)
             sys.exit(msg)
 
+    return config
+
 
 # ............................................................... Git functions
 def git_get_id(config, scope, property):
@@ -416,8 +418,7 @@ def main():
     config_file = os.path.expanduser("~/.git_passport")
     config_generate(config_file)
 
-    config = config_read(config_file)
-    config_validate(config)
+    config = config_validate(config_read(config_file))
 
     if config["enable_hook"]:
         local_email = git_get_id(config, "local", "email")
