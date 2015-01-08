@@ -24,7 +24,6 @@ def config_generate(filename):
 
     preset["General"] = {}
     preset["General"]["enable_hook"] = "True"
-    preset["General"]["devel_debug"] = "False"
     preset["General"]["sleep_duration"] = "1"
 
     preset["Git ID 0"] = {}
@@ -98,7 +97,7 @@ def config_validate(config):
             config (dict): Contains valid and converted configuration options
     """
     for key, value in config.items():
-        if key == "enable_hook" or key == "devel_debug":
+        if key == "enable_hook":
             if value == "True":
                 config[key] = True
             elif value == "False":
@@ -138,26 +137,6 @@ def git_get_id(config, scope, property):
             git_id (str): A name or email address
             error (str): Exception
     """
-    if config["devel_debug"]:
-        valid_args = ("global", "local", "email", "name")
-        fname = sys._getframe().f_code.co_name
-
-        if scope not in valid_args:
-            msg = "E > %s(scope): arg must be «%s» or «%s»." % (
-                fname,
-                valid_args[0],
-                valid_args[1]
-            )
-            sys.exit(msg)
-
-        if property not in valid_args:
-            msg = "E > %s(property): arg must be «%s» or «%s»." % (
-                fname,
-                valid_args[2],
-                valid_args[3]
-            )
-            sys.exit(msg)
-
     try:
         git_process = subprocess.Popen([
             "git",
@@ -208,18 +187,6 @@ def git_set_id(config, data, property):
         Returns:
             error (str): Exception
     """
-    if config["devel_debug"]:
-        valid_args = ("email", "name")
-        fname = sys._getframe().f_code.co_name
-
-        if property not in valid_args:
-            msg = "E > %s(property): arg must be «%s» or «%s»." % (
-                fname,
-                valid_args[0],
-                valid_args[1]
-            )
-            sys.exit(msg)
-
     try:
         subprocess.Popen([
             "git",
