@@ -46,11 +46,11 @@ def config_generate(filename):
             print(textwrap.dedent(msg).strip())
             with open(filename, "w") as configfile:
                 preset.write(configfile)
-            sys.exit("\n~Done~\n")
+            sys.exit("\n~Done~")
 
         except Exception as error:
             print(error)
-            sys.exit("\n~Quitting~\n")
+            sys.exit("\n~Quitting~")
 
 
 def config_read(filename):

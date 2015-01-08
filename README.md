@@ -32,6 +32,10 @@ your home directory:
 ```
 >:cd ~/.git/templates/hooks/git-passport
 >:./git-passport.py
+No configuration file found.
+Generating a sample configuration file.
+
+~Done~
 >:_
 ```
 
