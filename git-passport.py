@@ -222,12 +222,12 @@ def get_user_input(pool):
     while True:
         # http://stackoverflow.com/questions/7437261/how-is-it-possible-to-use-raw-input-in-a-python-git-hook
         sys.stdin = open("/dev/tty")
-        selection = input("» Please select a valid [ID] or type «q» to quit: ")
+        selection = input("» Select a valid [ID] or type «(q)uit» to exit: ")
 
         try:
             selection = int(selection)
         except ValueError:
-            if selection == "q":
+            if selection == "q" or selection == "quit":
                 sys.exit("\n~Quitting~\n")
             continue
 
