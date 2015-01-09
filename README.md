@@ -46,12 +46,12 @@ The configuration file is rather self-explanatory:
 enable_hook = True
 sleep_duration = 1.5
 
-[Git ID 0]
+[Passport 0]
 email = email_0@example.com
 name = name_0
 service = github.com
 
-[Git ID 1]
+[Passport 1]
 email = email_1@example.com
 name = name_1
 service = gitlab.com

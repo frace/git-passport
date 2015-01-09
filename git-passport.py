@@ -31,15 +31,15 @@ def config_create(filename):
     preset["General"]["enable_hook"] = "True"
     preset["General"]["sleep_duration"] = "1.5"
 
-    preset["Git ID 0"] = {}
-    preset["Git ID 0"]["email"] = "email_0@example.com"
-    preset["Git ID 0"]["name"] = "name_0"
-    preset["Git ID 0"]["service"] = "github.com"
+    preset["Passport 0"] = {}
+    preset["Passport 0"]["email"] = "email_0@example.com"
+    preset["Passport 0"]["name"] = "name_0"
+    preset["Passport 0"]["service"] = "github.com"
 
-    preset["Git ID 1"] = {}
-    preset["Git ID 1"]["email"] = "email_1@example.com"
-    preset["Git ID 1"]["name"] = "name_1"
-    preset["Git ID 1"]["service"] = "gitlab.com"
+    preset["Passport 1"] = {}
+    preset["Passport 1"]["email"] = "email_1@example.com"
+    preset["Passport 1"]["name"] = "name_1"
+    preset["Passport 1"]["service"] = "gitlab.com"
 
     if not os.path.exists(filename):
         try:
@@ -72,7 +72,7 @@ def config_read(filename):
     data.read(filename)
 
     # Match an arbitrary number of sections starting with pattern
-    pattern = "Git ID"
+    pattern = "Passport"
 
     # A generator to filter matching sections:
     # Let's see if user defined config sections match a pattern
@@ -221,7 +221,7 @@ def get_user_input(pool):
     while True:
         # http://stackoverflow.com/questions/7437261/how-is-it-possible-to-use-raw-input-in-a-python-git-hook
         sys.stdin = open("/dev/tty")
-        selection = input("» Select a valid [ID] or type «(q)uit» to exit: ")
+        selection = input("» Select a passport [ID] or «(q)uit»: ")
 
         try:
             selection = int(selection)
@@ -309,7 +309,7 @@ def identity_exists(config, email, name, url):
     msg = """
         ~Intermission~
 
-        ~Active Passport ID:
+        ~Active Passport:
             . User: %s
             . Mail: %s
             . Remote: %s
@@ -354,7 +354,7 @@ def url_exists(config, url):
         candidates = local_id
         msg = """
             ~Intermission~
-                Zero identities match your git provider, listing all IDs.
+                Zero passports matching - listing all passports.
                 remote.origin.url: %s
         """
 
