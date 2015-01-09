@@ -83,7 +83,7 @@ def config_read(filename):
 
     # Construct a custom dict containing allowed sections
     config = dict(raw_config.items("General"))
-    config["git_local_id"] = dict(enumerate(generate_matches()))
+    config["git_local_ids"] = dict(enumerate(generate_matches()))
 
     return config
 
@@ -120,7 +120,7 @@ def config_validate(config):
                 raise sys.exit(msg)
 
         # Here the values could really be anything...
-        elif key == "git_local_id":
+        elif key == "git_local_ids":
             pass
 
         else:
@@ -281,10 +281,10 @@ def add_global_id(config, target):
     """
     global_email = git_get_id(config, "global", "email")
     global_name = git_get_id(config, "global", "name")
-    local_id = config["git_local_id"]
+    local_ids = config["git_local_ids"]
 
     if global_email and global_name:
-        position = len(local_id)
+        position = len(local_ids)
         target[position] = {}
         target[position]["email"] = global_email
         target[position]["name"] = global_name
@@ -331,13 +331,13 @@ def url_exists(config, url):
         Returns:
             candidates (dict): Contains preselected Git ID candidates
     """
-    local_id = config["git_local_id"]
+    local_ids = config["git_local_ids"]
     netloc = urllib.parse.urlparse(url)[1]
 
     # A generator to filter matching sections:
     # Let's see if user defined IDs match remote.origin.url
     def generate_candidates():
-        for key, value in local_id.items():
+        for key, value in local_ids.items():
             if value.get("service") == netloc:
                 yield (key, value)
 
@@ -351,7 +351,7 @@ def url_exists(config, url):
         """
         print(textwrap.dedent(msg).lstrip() % (url))
     else:
-        candidates = local_id
+        candidates = local_ids
         msg = """
             ~Intermission~
                 Zero passports matching - listing all passports.
@@ -377,7 +377,7 @@ def no_url_exists(config, url):
         Returns:
             candidates (dict): Contains preselected Git ID candidates
     """
-    candidates = config["git_local_id"]
+    candidates = config["git_local_ids"]
     msg = """
         ~Intermission~
             «remote.origin.url» is not set, listing all IDs:
