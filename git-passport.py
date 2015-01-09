@@ -25,23 +25,23 @@ def config_create(filename):
         Args:
             filename (str): The complete `filepath` of the configuration file
     """
-    preset = configparser.ConfigParser()
-
-    preset["General"] = {}
-    preset["General"]["enable_hook"] = "True"
-    preset["General"]["sleep_duration"] = "0.75"
-
-    preset["Passport 0"] = {}
-    preset["Passport 0"]["email"] = "email_0@example.com"
-    preset["Passport 0"]["name"] = "name_0"
-    preset["Passport 0"]["service"] = "github.com"
-
-    preset["Passport 1"] = {}
-    preset["Passport 1"]["email"] = "email_1@example.com"
-    preset["Passport 1"]["name"] = "name_1"
-    preset["Passport 1"]["service"] = "gitlab.com"
-
     if not os.path.exists(filename):
+        preset = configparser.ConfigParser()
+
+        preset["General"] = {}
+        preset["General"]["enable_hook"] = "True"
+        preset["General"]["sleep_duration"] = "0.75"
+
+        preset["Passport 0"] = {}
+        preset["Passport 0"]["email"] = "email_0@example.com"
+        preset["Passport 0"]["name"] = "name_0"
+        preset["Passport 0"]["service"] = "github.com"
+
+        preset["Passport 1"] = {}
+        preset["Passport 1"]["email"] = "email_1@example.com"
+        preset["Passport 1"]["name"] = "name_1"
+        preset["Passport 1"]["service"] = "gitlab.com"
+
         try:
             msg = """
                 No configuration file found.
