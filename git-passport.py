@@ -247,23 +247,23 @@ def print_choice(choice):
     for key, value in choice.items():
         if value.get("flag") == "global":
             msg = """
-                ~:Global ID: [%s]
-                    . User: %s
-                    . E-Mail: %s
+                ~:Global ID: {}
+                    . User:   {}
+                    . E-Mail: {}
             """
-            print(textwrap.dedent(msg).lstrip() % (
+            print(textwrap.dedent(msg).lstrip().format(
                 key,
                 value["name"],
                 value["email"])
             )
         else:
             msg = """
-                ~Passport ID: [%s]
-                    . User: %s
-                    . E-Mail: %s
-                    . Service: %s
+                ~Passport ID: {}
+                    . User:    {}
+                    . E-Mail:  {}
+                    . Service: {}
             """
-            print(textwrap.dedent(msg).lstrip() % (
+            print(textwrap.dedent(msg).lstrip().format(
                 key,
                 value["name"],
                 value["email"],
@@ -310,11 +310,12 @@ def identity_exists(config, email, name, url):
         ~Intermission~
 
         ~Active Passport:
-            . User: %s
-            . E-Mail: %s
-            . Remote: %s
+            . User:   {}
+            . E-Mail: {}
+            . Remote: {}
     """
-    print(textwrap.dedent(msg).lstrip() % (name, email, url))
+
+    print(textwrap.dedent(msg).lstrip().format(name, email, url))
     sys.exit(time.sleep(duration))
 
 
