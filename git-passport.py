@@ -83,7 +83,6 @@ def config_read(filename):
 
     # Construct a custom dict containing allowed sections
     config = dict(data.items("General"))
-    config["git_local_id"] = {}
     config["git_local_id"] = dict(enumerate(generate_matches()))
 
     return config
