@@ -29,7 +29,7 @@ def config_create(filename):
 
     preset["General"] = {}
     preset["General"]["enable_hook"] = "True"
-    preset["General"]["sleep_duration"] = "1.5"
+    preset["General"]["sleep_duration"] = "0.75"
 
     preset["Passport 0"] = {}
     preset["Passport 0"]["email"] = "email_0@example.com"
