@@ -12,7 +12,7 @@ git identities.
 ```
 
 
-## Configuration
+## Installation
 There are many ways to handle your hooks. What I do in oder to work with
 multiple hooks is the following solution:
 ```
@@ -22,7 +22,13 @@ multiple hooks is the following solution:
 >:touch pre-commit && chmod +x $_
 ```
 
-Then in `~/.git/templates/hooks/pre-commit` I put a little snippet which
+Add the path to the template directory into your `~/.gitconfig`:
+```
+[init]
+    templatedir = ~/.git/templates
+```
+
+Then in `~/.git/templates/hooks/pre-commit` I put a little bash script which
 loads one hook after another:
 ```
 >:cat ~/.git/templates/hooks/pre-commit
@@ -36,20 +42,15 @@ done
 >:_
 ```
 
-Add the path to the template directory into your `~/.gitconfig`:
-```
-[init]
-    templatedir = ~/.git/templates
-```
-
 Afterwards each `git init` or `git clone` command will distribute
 the hook into a new repository.
 If you want to apply the hook to already exisiting repos then just run
 `git init` inside the repository in order to reinitialize it.
 
+
+## Configuration
 On the first run `git-passport.py` generates a sample configuration file inside
 your home directory:
-
 ```
 >:cd ~/.git/hooks/bin/git-passport
 >:./git-passport.py
