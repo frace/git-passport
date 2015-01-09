@@ -20,6 +20,7 @@ multiple hooks is the following solution:
 >:ln -sf ~/.git/hooks/bin/git-passport/git-passport.py ./00-git-passport
 >:mkdir -p ~/.git/templates/hooks && cd $_
 >:touch pre-commit && chmod +x $_
+>:_
 ```
 
 Add the path to the template directory into your `~/.gitconfig`:
