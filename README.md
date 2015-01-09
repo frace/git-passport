@@ -33,7 +33,7 @@ hooks_pre_commit="${HOME}/.git/hooks/pre-commit.d/"
 for hook in ${hooks_pre_commit}*; do
     "$hook"
 done
->:
+>:_
 ```
 
 Add the path to the template directory into your `~/.gitconfig`:
