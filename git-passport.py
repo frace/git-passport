@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 
-""" A Git pre-commit hook written in Python to manage multiple Git
-    user identities.
+""" git-passport is a Git pre-commit hook written in Python to manage
+    multiple Git user identities.
 """
 
 
