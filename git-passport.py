@@ -109,23 +109,23 @@ def config_validate(config):
             elif value == "False":
                 config[key] = False
             else:
-                msg = "E > Settings > %s: Expecting True or False." % (key)
-                raise sys.exit(msg)
+                msg = "E > Settings > {}: Expecting True or False."
+                raise sys.exit(msg).format(key)
 
         elif key == "sleep_duration":
             try:
                 config[key] = float(value)
             except ValueError:
-                msg = "E > Settings > %s: Expecting float or number." % (key)
-                raise sys.exit(msg)
+                msg = "E > Settings > {}: Expecting float or number."
+                raise sys.exit(msg).format(key)
 
         # Here the values could really be anything...
         elif key == "git_local_ids":
             pass
 
         else:
-            msg = "E > Settings > %s: Section/key unknown." % (key)
-            raise sys.exit(msg)
+            msg = "E > Settings > {}: Section/key unknown."
+            raise sys.exit(msg).format(key)
 
     return config
 
@@ -348,18 +348,18 @@ def url_exists(config, url):
         msg = """
             ~Intermission~
                 One or more identities match your current git provider.
-                remote.origin.url: %s
+                remote.origin.url: {}
         """
-        print(textwrap.dedent(msg).lstrip() % (url))
+        print(textwrap.dedent(msg).lstrip().format(url))
     else:
         candidates = local_ids
         msg = """
             ~Intermission~
                 Zero passports matching - listing all passports.
-                remote.origin.url: %s
+                remote.origin.url: {}
         """
 
-        print(textwrap.dedent(msg).lstrip() % (url))
+        print(textwrap.dedent(msg).lstrip().format(url))
         add_global_id(config, candidates)
 
     print_choice(candidates)
