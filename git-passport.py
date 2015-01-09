@@ -249,7 +249,7 @@ def print_choice(choice):
             msg = """
                 ~:Global ID: [%s]
                     . User: %s
-                    . Mail: %s
+                    . E-Mail: %s
             """
             print(textwrap.dedent(msg).lstrip() % (
                 key,
@@ -260,7 +260,7 @@ def print_choice(choice):
             msg = """
                 ~Passport ID: [%s]
                     . User: %s
-                    . Mail: %s
+                    . E-Mail: %s
                     . Service: %s
             """
             print(textwrap.dedent(msg).lstrip() % (
@@ -311,7 +311,7 @@ def identity_exists(config, email, name, url):
 
         ~Active Passport:
             . User: %s
-            . Mail: %s
+            . E-Mail: %s
             . Remote: %s
     """
     print(textwrap.dedent(msg).lstrip() % (name, email, url))
