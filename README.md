@@ -5,17 +5,38 @@ git identities.
 
 ## Get it!
 ```
->:mkdir -p ~/.git/templates/hooks
->:cd ~/.git/templates/hooks
+>:mkdir -p ~/.git/hooks/bin && cd $_
 >:git clone git://github.com/frace/git-passport.git
 >:chmod +x ./git-passport/git-passport.py
->:ln -sf ./git-passport/git-passport.py ./pre-commit
 >:_
 ```
 
-## Configuration
-Add the path to the template directory into your `~/.gitconfig`:
 
+## Configuration
+There are many ways to handle your hooks. What I do in oder to work with
+multiple hooks is the following solution:
+```
+>:mkdir -p ~/.git/hooks/pre-commit.d && cd $_
+>:ln -sf ~/.git/hooks/bin/git-passport/git-passport.py ./00-git-passport
+>:mkdir -p ~/.git/templates/hooks && cd $_
+>:touch pre-commit && chmod +x $_
+```
+
+Then in `~/.git/templates/hooks/pre-commit` I put a little snippet which
+loads one hook after another:
+```
+>:cat ~/.git/templates/hooks/pre-commit
+#!/usr/bin/env bash
+
+hooks_pre_commit="${HOME}/.git/hooks/pre-commit.d/"
+
+for hook in ${hooks_pre_commit}*; do
+    "$hook"
+done
+>:
+```
+
+Add the path to the template directory into your `~/.gitconfig`:
 ```
 [init]
     templatedir = ~/.git/templates
@@ -30,7 +51,7 @@ On the first run `git-passport.py` generates a sample configuration file inside
 your home directory:
 
 ```
->:cd ~/.git/templates/hooks/git-passport
+>:cd ~/.git/hooks/bin/git-passport
 >:./git-passport.py
 No configuration file found.
 Generating a sample configuration file.
