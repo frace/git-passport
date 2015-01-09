@@ -68,8 +68,8 @@ def config_read(filename):
         Returns:
             config (dict): Contains all allowed configuration sections
     """
-    data = configparser.ConfigParser()
-    data.read(filename)
+    raw_config = configparser.ConfigParser()
+    raw_config.read(filename)
 
     # Match an arbitrary number of sections starting with pattern
     pattern = "Passport"
@@ -77,12 +77,12 @@ def config_read(filename):
     # A generator to filter matching sections:
     # Let's see if user defined config sections match a pattern
     def generate_matches():
-        for section in data.items():
+        for section in raw_config.items():
             if pattern in section[0]:
                 yield dict(section[1])
 
     # Construct a custom dict containing allowed sections
-    config = dict(data.items("General"))
+    config = dict(raw_config.items("General"))
     config["git_local_id"] = dict(enumerate(generate_matches()))
 
     return config
