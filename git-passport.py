@@ -308,7 +308,8 @@ def identity_exists(config, email, name, url):
 
     msg = """
         ~Intermission~
-            Active Passport ID:
+
+        ~Active Passport ID:
             . User: %s
             . Mail: %s
             . Remote: %s
