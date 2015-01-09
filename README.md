@@ -23,7 +23,7 @@ multiple hooks is the following solution:
 >:_
 ```
 
-Add the path to the template directory into your `~/.gitconfig`:
+Add the Git template directory path into your `~/.gitconfig`:
 ```
 [init]
     templatedir = ~/.git/templates
