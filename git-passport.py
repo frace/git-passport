@@ -182,12 +182,12 @@ def git_get_url():
         raise error
 
 
-def git_set_id(config, data, property):
+def git_set_id(config, value, property):
     """ Set the email address or username as a local Git ID for a repository.
 
         Args:
             config (dict): Contains validated configuration options
-            data (str): A name or email address
+            value (str): A name or email address
             property (str): Type of `email` or `name`
 
         Returns:
@@ -199,7 +199,7 @@ def git_set_id(config, data, property):
             "config",
             "--local",
             "user." + property,
-            data
+            value
         ], stdout=subprocess.PIPE)
 
     except Exception as error:
