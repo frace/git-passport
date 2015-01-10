@@ -221,7 +221,7 @@ def get_user_input(pool):
     while True:
         # http://stackoverflow.com/questions/7437261/how-is-it-possible-to-use-raw-input-in-a-python-git-hook
         sys.stdin = open("/dev/tty")
-        selection = input("» Select a passport [ID] or «(q)uit»: ")
+        selection = input("» Select an [ID] or enter «(q)uit» to exit: ")
 
         try:
             selection = int(selection)
