@@ -1,6 +1,6 @@
 # What is git-passport?
-A Git pre-commit hook which lets us select a local ID from a predefined set of
-git identities.
+git-passport is a Git pre-commit hook written in Python to manage
+multiple Git user identities.
 
 
 ## Get it!
