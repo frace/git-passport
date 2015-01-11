@@ -232,10 +232,8 @@ def get_user_input(pool):
                 sys.exit("\n~Quitting~\n")
             continue
 
-        if selection not in pool:
-            continue
-        break
-    return selection
+        if selection in pool:
+            return selection
 
 
 def print_choice(choice):
