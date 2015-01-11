@@ -272,8 +272,8 @@ def print_choice(choice):
 
 
 def add_global_id(config, target):
-    """ Adds the global Git ID to a dictionary containing potential preselected
-        candidates.
+    """ If available add the global Git ID as a fallback ID to a
+        dictionary containing potential preselected candidates.
 
         Args:
             config (dict): Contains validated configuration options
