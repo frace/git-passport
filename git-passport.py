@@ -289,6 +289,16 @@ def add_global_id(config, target):
         target[position]["email"] = global_email
         target[position]["name"] = global_name
         target[position]["flag"] = "global"
+    else:
+        msg = """
+            ~Note
+                Tried to add your global Git ID as a passport candidate but
+                couldn't find one.
+                Consider to setup a global Git ID in order to get it listed
+                as a fallback passport.
+        """
+
+        print(textwrap.dedent(msg).lstrip())
 
 
 # .............................................................. Implementation
@@ -385,8 +395,8 @@ def no_url_exists(config, url):
             «remote.origin.url» is not set, listing all IDs:
     """
 
-    add_global_id(config, candidates)
     print(textwrap.dedent(msg).lstrip())
+    add_global_id(config, candidates)
     print_choice(candidates)
     return candidates
 
