@@ -94,8 +94,10 @@ at github.com.
 
 * * *
 ## Credits:
-+ Hook idea inspired by [ORR SELLA][related-1]
-+ Idea grew at [stackoverflow.com][related-2]
++ Hook idea inspired by [ORR SELLA][credits-1]
++ Idea grew at [stackoverflow.com][credits-2]
++ Code reviewed at [codereview.stackexchange.com][credits-3]
 
-[related-1]: https://orrsella.com/2013/08/10/git-using-different-user-emails-for-different-repositories/
-[related-2]: http://stackoverflow.com/questions/4220416/can-i-specify-multiple-users-for-myself-in-gitconfig/23107012#23107012
+[credits-1]: https://orrsella.com/2013/08/10/git-using-different-user-emails-for-different-repositories/
+[credits-2]: http://stackoverflow.com/questions/4220416/can-i-specify-multiple-users-for-myself-in-gitconfig/23107012#23107012
+[credits-3]: http://codereview.stackexchange.com/questions/76935/python-based-git-pre-commit-hook-to-manage-multiple-users-git-identities
