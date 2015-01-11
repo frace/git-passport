@@ -221,9 +221,10 @@ def get_user_input(pool):
             selection (int): A number representing a Git ID chosen by a user
     """
     while True:
-        # http://stackoverflow.com/questions/7437261/how-is-it-possible-to-use-raw-input-in-a-python-git-hook
+        #  Redirect sys.stdin to an open filehandle from which input() can read
         sys.stdin = open("/dev/tty")
         selection = input("» Select an [ID] or enter «(q)uit» to exit: ")
+        sys.stdin = sys.__stdin__  # Reset the stdin to its default value
 
         try:
             selection = int(selection)
