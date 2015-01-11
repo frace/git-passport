@@ -25,37 +25,39 @@ def config_create(filename):
         Args:
             filename (str): The complete `filepath` of the configuration file
     """
-    if not os.path.exists(filename):
-        preset = configparser.ConfigParser()
+    if os.path.exists(filename):
+        return
 
-        preset["General"] = {}
-        preset["General"]["enable_hook"] = "True"
-        preset["General"]["sleep_duration"] = "0.75"
+    preset = configparser.ConfigParser()
 
-        preset["Passport 0"] = {}
-        preset["Passport 0"]["email"] = "email_0@example.com"
-        preset["Passport 0"]["name"] = "name_0"
-        preset["Passport 0"]["service"] = "github.com"
+    preset["General"] = {}
+    preset["General"]["enable_hook"] = "True"
+    preset["General"]["sleep_duration"] = "0.75"
 
-        preset["Passport 1"] = {}
-        preset["Passport 1"]["email"] = "email_1@example.com"
-        preset["Passport 1"]["name"] = "name_1"
-        preset["Passport 1"]["service"] = "gitlab.com"
+    preset["Passport 0"] = {}
+    preset["Passport 0"]["email"] = "email_0@example.com"
+    preset["Passport 0"]["name"] = "name_0"
+    preset["Passport 0"]["service"] = "github.com"
 
-        try:
-            msg = """
-                No configuration file found.
-                Generating a sample configuration file.
-            """
+    preset["Passport 1"] = {}
+    preset["Passport 1"]["email"] = "email_1@example.com"
+    preset["Passport 1"]["name"] = "name_1"
+    preset["Passport 1"]["service"] = "gitlab.com"
 
-            print(textwrap.dedent(msg).strip())
-            with open(filename, "w") as configfile:
-                preset.write(configfile)
-            sys.exit("\n~Done~")
+    try:
+        msg = """
+            No configuration file found.
+            Generating a sample configuration file.
+        """
 
-        except Exception as error:
-            print(error)
-            raise sys.exit("\n~Quitting~")
+        print(textwrap.dedent(msg).strip())
+        with open(filename, "w") as configfile:
+            preset.write(configfile)
+        sys.exit("\n~Done~")
+
+    except Exception as error:
+        print(error)
+        raise sys.exit("\n~Quitting~")
 
 
 def config_read(filename):
