@@ -318,7 +318,8 @@ def identity_exists(config, email, name, url):
     """
 
     print(textwrap.dedent(msg).lstrip().format(name, email, url))
-    sys.exit(time.sleep(duration))
+    time.sleep(duration)
+    sys.exit()
 
 
 def url_exists(config, url):
