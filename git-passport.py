@@ -50,7 +50,7 @@ def config_create(filename):
             Generating a sample configuration file.
         """
 
-        print(textwrap.dedent(msg).strip())
+        print(dedented(msg, "strip"))
         with open(filename, "w") as configfile:
             preset.write(configfile)
         sys.exit("\n~Done~")
@@ -255,7 +255,7 @@ def print_choice(choice):
                     . User:   {}
                     . E-Mail: {}
             """
-            print(textwrap.dedent(msg).lstrip().format(
+            print(dedented(msg, "lstrip").format(
                 key,
                 value["name"],
                 value["email"])
@@ -266,7 +266,7 @@ def print_choice(choice):
                     . User:   {}
                     . E-Mail: {}
             """
-            print(textwrap.dedent(msg).lstrip().format(
+            print(dedented(msg, "lstrip").format(
                 key,
                 value["name"],
                 value["email"])
@@ -278,7 +278,7 @@ def print_choice(choice):
                     . E-Mail:  {}
                     . Service: {}
             """
-            print(textwrap.dedent(msg).lstrip().format(
+            print(dedented(msg, "lstrip").format(
                 key,
                 value["name"],
                 value["email"],
@@ -313,7 +313,28 @@ def add_global_id(config, target):
                 as a fallback passport.
         """
 
-        print(textwrap.dedent(msg).lstrip())
+        print(dedented(msg, "lstrip"))
+
+
+def dedented(message, strip_type):
+    """ Dedents a multiline string and strips leading (lstrip),
+        trailing (rstrip) or leading and trailing characters (strip).
+
+        Args:
+            message (str): An arbitrary string
+            strip_type (str): Defines the type of strip()
+
+        Returns:
+            A stripped and dedented string
+    """
+    if strip_type == "strip":
+        return textwrap.dedent(message).strip()
+    elif strip_type == "lstrip":
+        return textwrap.dedent(message).lstrip()
+    elif strip_type == "rstrip":
+        return textwrap.dedent(message).rstrip()
+    else:
+        return
 
 
 # .............................................................. Implementation
@@ -340,7 +361,7 @@ def identity_exists(config, email, name, url):
             . Remote: {}
     """
 
-    print(textwrap.dedent(msg).lstrip().format(name, email, url))
+    print(dedented(msg, "lstrip").format(name, email, url))
     time.sleep(duration)
     sys.exit()
 
@@ -376,7 +397,7 @@ def url_exists(config, url):
                 One or more identities match your current git provider.
                 remote.origin.url: {}
         """
-        print(textwrap.dedent(msg).lstrip().format(url))
+        print(dedented(msg, "lstrip").format(url))
     else:
         candidates = local_ids
         msg = """
@@ -385,7 +406,7 @@ def url_exists(config, url):
                 remote.origin.url: {}
         """
 
-        print(textwrap.dedent(msg).lstrip().format(url))
+        print(dedented(msg, "lstrip").format(url))
         add_global_id(config, candidates)
 
     print_choice(candidates)
@@ -410,7 +431,7 @@ def no_url_exists(config, url):
             «remote.origin.url» is not set, listing all IDs:
     """
 
-    print(textwrap.dedent(msg).lstrip())
+    print(dedented(msg, "lstrip"))
     add_global_id(config, candidates)
     print_choice(candidates)
     return candidates
