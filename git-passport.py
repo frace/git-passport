@@ -132,6 +132,20 @@ def config_validate(config):
 
 
 # ............................................................... Git functions
+def infected():
+    """ Checks if the current directory is under Git version control."""
+    if os.path.exists("./.git/HEAD"):
+        return
+
+    msg = """
+        The current directory does not seem to be a Git repository.
+        Nothing to do.
+    """
+
+    print(dedented(msg, "strip"))
+    sys.exit("\n~Quitting~")
+
+
 def git_get_id(config, scope, property):
     """ Get the email address or username of the global or local Git ID.
 
@@ -439,6 +453,8 @@ def no_url_exists(config, url):
 
 # ........................................................................ Glue
 def main():
+    infected()
+
     config_file = os.path.expanduser("~/.git_passport")
     config_create(config_file)
 
