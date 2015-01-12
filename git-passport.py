@@ -55,9 +55,8 @@ def config_create(filename):
             preset.write(configfile)
         sys.exit("\n~Done~")
 
-    except Exception as error:
-        print(error)
-        raise sys.exit("\n~Quitting~")
+    except Exception:
+        sys.exit("\n~Quitting~")
 
 
 def config_read(filename):
@@ -112,14 +111,14 @@ def config_validate(config):
                 config[key] = False
             else:
                 msg = "E > Settings > {}: Expecting True or False."
-                raise sys.exit(msg).format(key)
+                sys.exit(msg).format(key)
 
         elif key == "sleep_duration":
             try:
                 config[key] = float(value)
             except ValueError:
                 msg = "E > Settings > {}: Expecting float or number."
-                raise sys.exit(msg).format(key)
+                sys.exit(msg).format(key)
 
         # Here the values could really be anything...
         elif key == "git_local_ids":
@@ -127,7 +126,7 @@ def config_validate(config):
 
         else:
             msg = "E > Settings > {}: Section/key unknown."
-            raise sys.exit(msg).format(key)
+            sys.exit(msg).format(key)
 
     return config
 
