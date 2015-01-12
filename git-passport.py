@@ -143,7 +143,9 @@ def git_get_id(config, scope, property):
 
         Returns:
             git_id (str): A name or email address
-            error (str): Exception
+
+        Raises:
+            Exception: If subprocess.Popen() fails
     """
     try:
         git_process = subprocess.Popen([
@@ -166,7 +168,9 @@ def git_get_url():
 
         Returns:
             git_url (str): The local and active remote.origin.url
-            error (str): Exception
+
+        Raises:
+            Exception: If subprocess.Popen() fails
     """
     try:
         git_process = subprocess.Popen([
@@ -192,8 +196,8 @@ def git_set_id(config, value, property):
             value (str): A name or email address
             property (str): Type of `email` or `name`
 
-        Returns:
-            error (str): Exception
+        Raises:
+            Exception: If subprocess.Popen() fails
     """
     try:
         subprocess.Popen([
