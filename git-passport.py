@@ -257,6 +257,17 @@ def print_choice(choice):
                 value["name"],
                 value["email"])
             )
+        elif not value.get("service"):
+            msg = """
+                ~:Passport ID: {}
+                    . User:   {}
+                    . E-Mail: {}
+            """
+            print(textwrap.dedent(msg).lstrip().format(
+                key,
+                value["name"],
+                value["email"])
+            )
         else:
             msg = """
                 ~Passport ID: {}
