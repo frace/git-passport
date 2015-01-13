@@ -102,6 +102,9 @@ def config_validate(config):
 
         Returns:
             config (dict): Contains valid and converted configuration options
+
+        Raises:
+            Exception: If a value fails to validate or is unknown
     """
     for key, value in config.items():
         if key == "enable_hook":
