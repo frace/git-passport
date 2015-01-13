@@ -111,14 +111,14 @@ def config_validate(config):
                 config[key] = False
             else:
                 msg = "E > Settings > {}: Expecting True or False."
-                sys.exit(msg).format(key)
+                raise Exception(msg.format(key))
 
         elif key == "sleep_duration":
             try:
                 config[key] = float(value)
             except ValueError:
                 msg = "E > Settings > {}: Expecting float or number."
-                sys.exit(msg).format(key)
+                raise Exception(msg.format(key))
 
         # Here the values could really be anything...
         elif key == "git_local_ids":
@@ -126,7 +126,7 @@ def config_validate(config):
 
         else:
             msg = "E > Settings > {}: Section/key unknown."
-            sys.exit(msg).format(key)
+            raise Exception(msg.format(key))
 
     return config
 
