@@ -448,8 +448,6 @@ def no_url_exists(config, url):
 
 # ........................................................................ Glue
 def main():
-    git_infected()
-
     config_file = os.path.expanduser("~/.git_passport")
     config_create(config_file)
 
@@ -459,6 +457,8 @@ def main():
         local_email = git_config_get(config, "local", "email")
         local_name = git_config_get(config, "local", "name")
         local_url = git_config_get(config, "local", "url")
+
+        git_infected()
 
         if local_email and local_name:
             identity_exists(config, local_email, local_name, local_url)
