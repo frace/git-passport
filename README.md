@@ -1,6 +1,6 @@
 # What is git-passport?
-git-passport is a Git pre-commit hook written in Python to manage
-multiple Git user identities.
+git-passport is a Git command and hook written in Python to manage multiple Git
+users / user identities.
 
 
 ## Get it!
@@ -23,13 +23,18 @@ multiple hooks is the following solution:
 >:_
 ```
 
-Add the Git template directory path into your `~/.gitconfig`:
+Add the Git template directory path into your `~/.gitconfig` and create an
+alias in order to be able to execute the script manually as a «native» git
+command by invoking `git passport`:
 ```
+[alias]
+    passport = !${HOME}/.git/hooks/bin/git-passport/git-passport.py
+
 [init]
     templatedir = ~/.git/templates
 ```
 
-Then in `~/.git/templates/hooks/pre-commit` I put a little bash script which
+In `~/.git/templates/hooks/pre-commit` I put a little bash script which
 loads one hook after another:
 ```
 >:cat ~/.git/templates/hooks/pre-commit
