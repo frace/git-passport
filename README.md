@@ -64,10 +64,10 @@ Generating a sample configuration file.
 
 The configuration file is rather self-explanatory:
 ```
->:cat ~/.git_passport
+>:cat ~/.gitpassport
 [General]
 enable_hook = True
-sleep_duration = 1.5
+sleep_duration = 0.75
 
 [Passport 0]
 email = email_0@example.com
