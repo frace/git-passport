@@ -163,13 +163,14 @@ def git_infected():
     sys.exit("\n~Quitting~")
 
 
-def git_get_id(config, scope, property):
-    """ Get the email address or username of the global or local Git ID.
+def git_config_get(config, scope, property):
+    """ Get the email address, username of the global or local Git ID.
+        Also gets the local remote.origin.url of a Git repository.
 
         Args:
             config (dict): Contains validated configuration options
             scope (str): Search inside a `global` or `local` scope
-            property (str): Type of `email` or `name`
+            property (str): Type of `email` or `name` or `url`
 
         Returns:
             git_id (str): A name or email address
@@ -177,42 +178,19 @@ def git_get_id(config, scope, property):
         Raises:
             Exception: If subprocess.Popen() fails
     """
+    git_args = "remote.origin.url" if property == "url" else "user." + property
+
     try:
         git_process = subprocess.Popen([
             "git",
             "config",
             "--get",
             "--" + scope,
-            "user." + property
+            git_args
         ], stdout=subprocess.PIPE)
 
         git_id = git_process.communicate()[0].decode("utf-8")
         return git_id.replace("\n", "")
-
-    except Exception:
-        raise
-
-
-def git_get_url():
-    """ Get the local remote.origin.url of a Git repository.
-
-        Returns:
-            git_url (str): The local and active remote.origin.url
-
-        Raises:
-            Exception: If subprocess.Popen() fails
-    """
-    try:
-        git_process = subprocess.Popen([
-            "git",
-            "config",
-            "--get",
-            "--local",
-            "remote.origin.url"
-        ], stdout=subprocess.PIPE)
-
-        git_url = git_process.communicate()[0].decode("utf-8")
-        return git_url.replace("\n", "")
 
     except Exception:
         raise
@@ -325,8 +303,8 @@ def add_global_id(config, target):
             config (dict): Contains validated configuration options
             target (dict): Contains preselected local Git IDs
     """
-    global_email = git_get_id(config, "global", "email")
-    global_name = git_get_id(config, "global", "name")
+    global_email = git_config_get(config, "global", "email")
+    global_name = git_config_get(config, "global", "name")
     local_ids = config["git_local_ids"]
 
     if global_email and global_name:
@@ -478,9 +456,9 @@ def main():
     config = config_validate(config_read(config_file))
 
     if config["enable_hook"]:
-        local_email = git_get_id(config, "local", "email")
-        local_name = git_get_id(config, "local", "name")
-        local_url = git_get_url()
+        local_email = git_config_get(config, "local", "email")
+        local_name = git_config_get(config, "local", "name")
+        local_url = git_config_get(config, "local", "url")
 
         if local_email and local_name:
             identity_exists(config, local_email, local_name, local_url)
