@@ -451,7 +451,7 @@ def no_url_exists(config, url):
 
 # ........................................................................ Glue
 def main():
-    config_file = os.path.expanduser("~/.git_passport")
+    config_file = os.path.expanduser("~/.gitpassport")
     config_create(config_file)
 
     config = config_validate(config_read(config_file))
