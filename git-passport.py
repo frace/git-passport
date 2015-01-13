@@ -69,22 +69,22 @@ def config_read(filename):
         Returns:
             config (dict): Contains all allowed configuration sections
     """
+    # A generator to filter matching sections:
+    # Let's see if user defined config sections match a pattern
+    def gen_matches(config, section):
+        for item in config.items():
+            if section in item[0]:
+                yield dict(item[1])
+
     raw_config = configparser.ConfigParser()
     raw_config.read(filename)
 
     # Match an arbitrary number of sections starting with pattern
     pattern = "Passport"
 
-    # A generator to filter matching sections:
-    # Let's see if user defined config sections match a pattern
-    def generate_matches():
-        for section in raw_config.items():
-            if pattern in section[0]:
-                yield dict(section[1])
-
     # Construct a custom dict containing allowed sections
     config = dict(raw_config.items("General"))
-    config["git_local_ids"] = dict(enumerate(generate_matches()))
+    config["git_local_ids"] = dict(enumerate(gen_matches(raw_config, pattern)))
 
     return config
 
@@ -410,17 +410,17 @@ def url_exists(config, url):
         Returns:
             candidates (dict): Contains preselected Git ID candidates
     """
+    # A generator to filter matching sections by options:
+    # Let's see if user defined IDs match remote.origin.url
+    def gen_candidates(ids, url):
+        for key, value in ids.items():
+            if value.get("service") == url:
+                yield (key, value)
+
     local_ids = config["git_local_ids"]
     netloc = urllib.parse.urlparse(url)[1]
 
-    # A generator to filter matching sections:
-    # Let's see if user defined IDs match remote.origin.url
-    def generate_candidates():
-        for key, value in local_ids.items():
-            if value.get("service") == netloc:
-                yield (key, value)
-
-    candidates = dict(generate_candidates())
+    candidates = dict(gen_candidates(local_ids, netloc))
 
     if len(candidates) >= 1:
         msg = """
