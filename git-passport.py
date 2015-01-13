@@ -148,8 +148,8 @@ def git_infected():
         # Captures the git return code
         exit_status = git_process.wait()
 
-    except Exception as error:
-        raise error
+    except Exception:
+        raise
 
     if not exit_status:
         return
@@ -189,8 +189,8 @@ def git_get_id(config, scope, property):
         git_id = git_process.communicate()[0].decode("utf-8")
         return git_id.replace("\n", "")
 
-    except Exception as error:
-        raise error
+    except Exception:
+        raise
 
 
 def git_get_url():
@@ -214,8 +214,8 @@ def git_get_url():
         git_url = git_process.communicate()[0].decode("utf-8")
         return git_url.replace("\n", "")
 
-    except Exception as error:
-        raise error
+    except Exception:
+        raise
 
 
 def git_set_id(config, value, property):
@@ -238,8 +238,8 @@ def git_set_id(config, value, property):
             value
         ], stdout=subprocess.PIPE)
 
-    except Exception as error:
-        raise error
+    except Exception:
+        raise
 
 
 # ............................................................ Helper functions
