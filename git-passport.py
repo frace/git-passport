@@ -173,7 +173,7 @@ def git_config_get(config, scope, property):
             property (str): Type of `email` or `name` or `url`
 
         Returns:
-            git_id (str): A name or email address
+            value (str): A name, email address or url
 
         Raises:
             Exception: If subprocess.Popen() fails
@@ -189,8 +189,8 @@ def git_config_get(config, scope, property):
             git_args
         ], stdout=subprocess.PIPE)
 
-        git_id = git_process.communicate()[0].decode("utf-8")
-        return git_id.replace("\n", "")
+        value = git_process.communicate()[0].decode("utf-8")
+        return value.replace("\n", "")
 
     except Exception:
         raise
