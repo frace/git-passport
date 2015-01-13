@@ -132,9 +132,26 @@ def config_validate(config):
 
 
 # ............................................................... Git functions
-def infected():
-    """ Checks if the current directory is under Git version control."""
-    if os.path.exists("./.git/HEAD"):
+def git_infected():
+    """ Checks if the current directory is under Git version control.
+
+        Raises:
+            Exception: If subprocess.Popen() fails
+    """
+    try:
+        git_process = subprocess.Popen([
+            "git",
+            "rev-parse",
+            "--is-inside-work-tree"
+        ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+        # Captures the git return code
+        exit_status = git_process.wait()
+
+    except Exception as error:
+        raise error
+
+    if not exit_status:
         return
 
     msg = """
@@ -453,7 +470,7 @@ def no_url_exists(config, url):
 
 # ........................................................................ Glue
 def main():
-    infected()
+    git_infected()
 
     config_file = os.path.expanduser("~/.git_passport")
     config_create(config_file)
