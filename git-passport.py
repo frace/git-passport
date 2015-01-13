@@ -196,7 +196,7 @@ def git_config_get(config, scope, property):
         raise
 
 
-def git_set_id(config, value, property):
+def git_config_set(config, value, property):
     """ Set the email address or username as a local Git ID for a repository.
 
         Args:
@@ -468,8 +468,8 @@ def main():
             candidates = no_url_exists(config, local_url)
 
         selected_id = get_user_input(candidates.keys())
-        git_set_id(config, candidates[selected_id]["email"], "email")
-        git_set_id(config, candidates[selected_id]["name"], "name")
+        git_config_set(config, candidates[selected_id]["email"], "email")
+        git_config_set(config, candidates[selected_id]["name"], "name")
         print("\n~Done~\n")
 
 
