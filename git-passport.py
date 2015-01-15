@@ -81,19 +81,15 @@ def config_read(filename):
 
     # Match an arbitrary number of sections starting with pattern
     pattern = "Passport"
-    whitelist_sections = ("General", "Passport")
-    whitelist_options = ("email",
-                         "enable_hook",
-                         "name",
-                         "service",
-                         "sleep_duration")
+    whitelist = [("General", "Passport"),
+                 ("email", "enable_hook", "name", "service", "sleep_duration")]
 
     for section in raw_config.sections():
-        if not section.startswith(whitelist_sections):
+        if not section.startswith(whitelist[0]):
             pass
 
         for option in raw_config.options(section):
-            if not option.startswith(whitelist_options):
+            if option not in whitelist[1]:
                 pass
 
     # Construct a custom dict containing allowed sections
