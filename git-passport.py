@@ -10,6 +10,7 @@
 # ..................................................................... Imports
 import configparser
 import os.path
+import re
 import subprocess
 import sys
 import textwrap
@@ -60,43 +61,42 @@ def config_create(filename):
 
 
 def config_read(filename):
-    """ Read a provided configuration file and «import» allowed sections and
-        their keys/values into a dictionary.
-
-        Args:
-            filename (str): The complete `filepath` of the configuration file
-
-        Returns:
-            config (dict): Contains all allowed configuration sections
-    """
-    # A generator to filter matching sections:
-    # Let's see if user defined config sections match a pattern
-    def gen_matches(config, section):
-        for item in config.items():
-            if section in item[0]:
-                yield dict(item[1])
+    # A generator to filter false email addresses:
+    def gen_false_email(config, pattern):
+        for section in config.sections():
+            if section.startswith(pattern):
+                email = config.get(section, "email")
+                if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+                    yield email
 
     raw_config = configparser.ConfigParser()
     raw_config.read(filename)
 
-    # Match an arbitrary number of sections starting with pattern
-    pattern = "Passport"
     whitelist = [("General", "Passport"),
                  ("email", "enable_hook", "name", "service", "sleep_duration")]
 
-    for section in raw_config.sections():
-        if not section.startswith(whitelist[0]):
-            pass
+    false_scheme = [[section
+                     for section in raw_config.sections()
+                     if not section.startswith(whitelist[0])],
+                    [option
+                     for section in raw_config.sections()
+                     for option in raw_config.options(section)
+                     if option not in whitelist[1]]]
 
-        for option in raw_config.options(section):
-            if option not in whitelist[1]:
-                pass
+    false_email = list(gen_false_email(raw_config, "Passport"))
+
+    if len(false_scheme[0]):
+        print(false_scheme[0])
+    if len(false_scheme[1]):
+        print(false_scheme[1])
+    if len(false_email):
+        print(false_email)
 
     # Construct a custom dict containing allowed sections
-    config = dict(raw_config.items("General"))
-    config["git_local_ids"] = dict(enumerate(gen_matches(raw_config, pattern)))
+    # config = dict(raw_config.items("General"))
+    # config["git_local_ids"] = dict(enumerate(gen_matches(raw_config, pattern)))
 
-    return config
+    # return config
 
 
 def config_validate(config):
