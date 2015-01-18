@@ -74,7 +74,7 @@ def config_validate_scheme(filename):
                  ["email", "enable_hook", "name", "service", "sleep_duration"]]
 
     # Create a list containing non-whitelisted section and option names
-    pattern_section = r"(Passport)\s[0-9]+$"
+    pattern_section = r"^(Passport)\s[0-9]+$"
     false_scheme = [[section  # Validate sections
                      for section in raw_config.sections()
                      if section not in whitelist[0]
@@ -128,7 +128,7 @@ def config_validate_values(filename):
             filename (str): The complete `filepath` of the configuration file
     """
     def filter_email(config):
-        pattern_section = r"(Passport)\s[0-9]+$"
+        pattern_section = r"^(Passport)\s[0-9]+$"
         pattern_email = r"[^@]+@[^@]+\.[^@]+"
         for section in config.sections():
             if re.match(pattern_section, section):
@@ -188,7 +188,7 @@ def config_release(filename):
             config (dict): Contains all allowed configuration sections
     """
     def passport(config):
-        pattern_section = r"(Passport)\s[0-9]+$"
+        pattern_section = r"^(Passport)\s[0-9]+$"
         for passport in config.items():
             if re.match(pattern_section, passport[0]):
                 yield dict(passport[1])
