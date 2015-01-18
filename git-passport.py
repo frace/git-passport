@@ -95,7 +95,7 @@ def config_validate_scheme(filename):
 
             ~Quitting~
         """.format(", ".join(false_scheme[0]),
-                   ", ".join(whitelist[0][0:2]))
+                   ", ".join(whitelist[0]))
         print(dedented(msg, "strip"))
         sys.exit()
 
