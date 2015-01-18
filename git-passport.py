@@ -70,14 +70,15 @@ def config_validate_scheme(filename):
     raw_config = configparser.ConfigParser()
     raw_config.read(filename)
 
-    whitelist = [["General", "Passport", r"(Passport)\s[0-9]+$"],
+    whitelist = [["General", "Passport"],
                  ["email", "enable_hook", "name", "service", "sleep_duration"]]
 
     # Create a list containing non-whitelisted section and option names
+    pattern_section = r"(Passport)\s[0-9]+$"
     false_scheme = [[section  # Validate sections
                      for section in raw_config.sections()
                      if section not in whitelist[0]
-                     if not re.match(whitelist[0][2], section)],
+                     if not re.match(pattern_section, section)],
                     [option  # Validate options
                      for section in raw_config.sections()
                      for option in raw_config.options(section)
