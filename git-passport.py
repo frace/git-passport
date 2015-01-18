@@ -19,7 +19,7 @@ import urllib.parse
 
 
 # ............................................................ Config functions
-def config_create(filename):
+def config_preset(filename):
     """ Create a configuration file containing sample data inside the home
         directory if none exists yet.
 
@@ -60,86 +60,145 @@ def config_create(filename):
         sys.exit("\n~Quitting~")
 
 
-def config_read(filename):
-    # A generator to filter false email addresses:
-    def gen_false_email(config, pattern):
+def config_validate_scheme(filename):
+    """ Validate section and option names of a provided configuration file.
+        Quit the script and tell the user if we find false names.
+
+        Args:
+            filename (str): The complete `filepath` of the configuration file
+    """
+    raw_config = configparser.ConfigParser()
+    raw_config.read(filename)
+
+    whitelist = [["General", "Passport", r"(Passport)\s[0-9]+$"],
+                 ["email", "enable_hook", "name", "service", "sleep_duration"]]
+
+    # Create a list containing non-whitelisted section and option names
+    false_scheme = [[section  # Validate sections
+                     for section in raw_config.sections()
+                     if section not in whitelist[0]
+                     if not re.match(whitelist[0][2], section)],
+                    [option  # Validate options
+                     for section in raw_config.sections()
+                     for option in raw_config.options(section)
+                     if option not in whitelist[1]]]
+
+    # Quit if we have wrong section names
+    if len(false_scheme[0]):
+        msg = """
+            E > Configuration > Invalid sections:
+            >>> {}
+
+            Allowed sections (Passport sections scheme: "Passport 0"):
+            >>> {}
+
+            ~Quitting~
+        """.format(", ".join(false_scheme[0]),
+                   ", ".join(whitelist[0][0:2]))
+        print(dedented(msg, "strip"))
+        sys.exit()
+
+    # Quit if we have wrong option names
+    if len(false_scheme[1]):
+        msg = """
+            E > Configuration > Invalid options:
+            >>> {}
+
+            Allowed options:
+            >>> {}
+
+            ~Quitting~
+        """.format(", ".join(false_scheme[1]),
+                   ", ".join(whitelist[1]))
+        print(dedented(msg, "strip"))
+        sys.exit()
+
+
+def config_validate_values(filename):
+    """ Validate certain values of a provided configuration file.
+        Quit the script and tell the user if we find false values.
+
+        Values to be validated:
+            email: E-Mail scheme
+            sleep_duration: Float
+            enable_hook: Boolean
+
+        Args:
+            filename (str): The complete `filepath` of the configuration file
+    """
+    def filter_email(config):
+        pattern_section = r"(Passport)\s[0-9]+$"
+        pattern_email = r"[^@]+@[^@]+\.[^@]+"
         for section in config.sections():
-            if section.startswith(pattern):
+            if re.match(pattern_section, section):
                 email = config.get(section, "email")
-                if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+                if not re.match(pattern_email, email):
                     yield email
 
     raw_config = configparser.ConfigParser()
     raw_config.read(filename)
 
-    whitelist = [("General", "Passport"),
-                 ("email", "enable_hook", "name", "service", "sleep_duration")]
+    false_email = list(filter_email(raw_config))
 
-    false_scheme = [[section
-                     for section in raw_config.sections()
-                     if not section.startswith(whitelist[0])],
-                    [option
-                     for section in raw_config.sections()
-                     for option in raw_config.options(section)
-                     if option not in whitelist[1]]]
-
-    false_email = list(gen_false_email(raw_config, "Passport"))
-
-    if len(false_scheme[0]):
-        print(false_scheme[0])
-    if len(false_scheme[1]):
-        print(false_scheme[1])
+    # Quit if we have wrong email addresses
     if len(false_email):
-        print(false_email)
+        msg = """
+            E > Configuration > Invalid email address:
+            >>> {}
 
-    # Construct a custom dict containing allowed sections
-    # config = dict(raw_config.items("General"))
-    # config["git_local_ids"] = dict(enumerate(gen_matches(raw_config, pattern)))
+            ~Quitting~
+        """.format(", ".join(false_email))
+        print(dedented(msg, "strip"))
+        sys.exit()
 
-    # return config
+    # Quit if we have wrong boolean values
+    try:
+        raw_config.getboolean("General", "enable_hook")
+    except ValueError:
+        msg = """
+            E > Configuration > enable_hook: Expecting True or False.
+
+            ~Quitting~
+        """
+        print(dedented(msg, "strip"))
+        sys.exit()
+
+    # Quit if we have wrong float values
+    try:
+        raw_config.getfloat("General", "sleep_duration")
+    except ValueError:
+        msg = """
+            E > Configuration > sleep_duration: Expecting float or number.
+
+            ~Quittting~
+        """
+        print(dedented(msg, "strip"))
+        sys.exit()
 
 
-def config_validate(config):
-    """ Validate and convert certain keys and values of a given dictionary
-        containing a set of configuration options. If unexpected values are
-        found we quit the script and notify the user what went wrong.
-
-        Since ``ConfigParser`` only accepts strings when setting up a default
-        config it is necessary to convert some values to numbers and boolean.
+def config_release(filename):
+    """ Read a provided configuration file and «import» sections and their
+        validated keys/values into a dictionary.
 
         Args:
-            config (dict): Contains all allowed configuration sections
+            filename (str): The complete `filepath` of the configuration file
 
         Returns:
-            config (dict): Contains valid and converted configuration options
-
-        Raises:
-            Exception: If a value fails to validate or is unknown
+            config (dict): Contains all allowed configuration sections
     """
-    for key, value in config.items():
-        if key == "enable_hook":
-            if value == "True":
-                config[key] = True
-            elif value == "False":
-                config[key] = False
-            else:
-                msg = "E > Settings > {}: Expecting True or False."
-                raise Exception(msg.format(key))
+    def passport(config):
+        pattern_section = r"(Passport)\s[0-9]+$"
+        for passport in config.items():
+            if re.match(pattern_section, passport[0]):
+                yield dict(passport[1])
 
-        elif key == "sleep_duration":
-            try:
-                config[key] = float(value)
-            except ValueError:
-                msg = "E > Settings > {}: Expecting float or number."
-                raise Exception(msg.format(key))
+    raw_config = configparser.ConfigParser()
+    raw_config.read(filename)
 
-        # Here the values could really be anything...
-        elif key == "git_local_ids":
-            pass
-
-        else:
-            msg = "E > Settings > {}: Section/key unknown."
-            raise Exception(msg.format(key))
+    config = {}
+    config["enable_hook"] = raw_config.getboolean("General", "enable_hook")
+    config["sleep_duration"] = raw_config.getfloat("General", "sleep_duration")
+    config["git_local_ids"] = dict(enumerate(passport(raw_config)))
 
     return config
 
@@ -462,9 +521,12 @@ def no_url_exists(config, url):
 # ........................................................................ Glue
 def main():
     config_file = os.path.expanduser("~/.gitpassport")
-    config_create(config_file)
 
-    config = config_validate(config_read(config_file))
+    config_preset(config_file)
+    config_validate_scheme(config_file)
+    config_validate_values(config_file)
+
+    config = config_release(config_file)
 
     if config["enable_hook"]:
         local_email = git_config_get(config, "local", "email")
