@@ -199,7 +199,7 @@ def config_release(filename):
     config = {}
     config["enable_hook"] = raw_config.getboolean("General", "enable_hook")
     config["sleep_duration"] = raw_config.getfloat("General", "sleep_duration")
-    config["git_local_ids"] = dict(enumerate(passport(raw_config)))
+    config["git_passports"] = dict(enumerate(passport(raw_config)))
 
     return config
 
@@ -378,10 +378,10 @@ def add_global_id(config, target):
     """
     global_email = git_config_get(config, "global", "email")
     global_name = git_config_get(config, "global", "name")
-    local_ids = config["git_local_ids"]
+    local_passports = config["git_passports"]
 
     if global_email and global_name:
-        position = len(local_ids)
+        position = len(local_passports)
         target[position] = {}
         target[position]["email"] = global_email
         target[position]["name"] = global_name
@@ -468,10 +468,10 @@ def url_exists(config, url):
             if value.get("service") == url:
                 yield (key, value)
 
-    local_ids = config["git_local_ids"]
+    local_passports = config["git_passports"]
     netloc = urllib.parse.urlparse(url)[1]
 
-    candidates = dict(gen_candidates(local_ids, netloc))
+    candidates = dict(gen_candidates(local_passports, netloc))
 
     if len(candidates) >= 1:
         msg = """
@@ -481,7 +481,7 @@ def url_exists(config, url):
         """
         print(dedented(msg, "lstrip").format(url))
     else:
-        candidates = local_ids
+        candidates = local_passports
         msg = """
             ~Intermission~
                 Zero passports matching - listing all passports.
@@ -507,7 +507,7 @@ def no_url_exists(config, url):
         Returns:
             candidates (dict): Contains preselected Git ID candidates
     """
-    candidates = config["git_local_ids"]
+    candidates = config["git_passports"]
     msg = """
         ~Intermission~
             «remote.origin.url» is not set, listing all IDs:
