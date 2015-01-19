@@ -19,6 +19,29 @@ import time
 import urllib.parse
 
 
+# .......................................................... Argparse functions
+def args_release():
+    arg_parser = argparse.ArgumentParser(add_help=False)
+    arg_parser.description = "manage multiple Git identities"
+    arg_parser.usage = "git passport (--help | --force | --remove)"
+
+    arg_group = arg_parser.add_mutually_exclusive_group()
+    arg_group.add_argument("-h",
+                           "--help",
+                           action="help",
+                           help="show this help message and exit")
+    arg_group.add_argument("-f",
+                           "--force",
+                           action="store_true",
+                           help="force to set a passport in a .git/config")
+    arg_group.add_argument("-r",
+                           "--remove",
+                           action="store_true",
+                           help="remove a passport from a .git/config")
+
+    return arg_parser.parse_args()
+
+
 # ............................................................ Config functions
 def config_preset(filename):
     """ Create a configuration file containing sample data inside the home
@@ -540,26 +563,6 @@ def no_url_exists(config, url):
 
 # ........................................................................ Glue
 def main():
-    arg_parser = argparse.ArgumentParser(add_help=False)
-    arg_parser.description = "manage multiple Git identities"
-    arg_parser.usage = "git passport (--help | --force | --remove)"
-
-    arg_group = arg_parser.add_mutually_exclusive_group()
-    arg_group.add_argument("-h",
-                           "--help",
-                           action="help",
-                           help="show this help message and exit")
-    arg_group.add_argument("-f",
-                           "--force",
-                           action="store_true",
-                           help="force to set a passport in a .git/config")
-    arg_group.add_argument("-r",
-                           "--remove",
-                           action="store_true",
-                           help="remove a passport from a .git/config")
-
-    args = arg_parser.parse_args()
-
     config_file = os.path.expanduser("~/.gitpassport")
     config_preset(config_file)
     config_validate_scheme(config_file)
@@ -567,6 +570,7 @@ def main():
     config = config_release(config_file)
 
     if config["enable_hook"]:
+        args = args_release()
         local_email = git_config_get(config, "local", "email")
         local_name = git_config_get(config, "local", "name")
         local_url = git_config_get(config, "local", "url")
