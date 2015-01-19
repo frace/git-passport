@@ -8,6 +8,7 @@
 
 
 # ..................................................................... Imports
+import argparse
 import configparser
 import os.path
 import re
@@ -293,6 +294,25 @@ def git_config_set(config, value, property):
         raise
 
 
+def git_config_remove():
+    """ Remove an existing Git identity.
+
+        Raises:
+            Exception: If subprocess.Popen() fails
+    """
+    try:
+        subprocess.Popen([
+            "git",
+            "config",
+            "--local",
+            "--remove-section",
+            "user"
+        ], stdout=subprocess.PIPE)
+
+    except Exception:
+        raise
+
+
 # ............................................................ Helper functions
 def get_user_input(pool):
     """ Prompt a user to select a number from a list of numbers representing
@@ -445,7 +465,6 @@ def identity_exists(config, email, name, url):
 
     print(dedented(msg, "lstrip").format(name, email, url))
     time.sleep(duration)
-    sys.exit()
 
 
 def url_exists(config, url):
@@ -521,12 +540,30 @@ def no_url_exists(config, url):
 
 # ........................................................................ Glue
 def main():
-    config_file = os.path.expanduser("~/.gitpassport")
+    arg_parser = argparse.ArgumentParser(add_help=False)
+    arg_parser.description = "manage multiple Git identities"
+    arg_parser.usage = "git passport (--help | --force | --remove)"
 
+    arg_group = arg_parser.add_mutually_exclusive_group()
+    arg_group.add_argument("-h",
+                           "--help",
+                           action="help",
+                           help="show this help message and exit")
+    arg_group.add_argument("-f",
+                           "--force",
+                           action="store_true",
+                           help="force to set a passport in a .git/config")
+    arg_group.add_argument("-r",
+                           "--remove",
+                           action="store_true",
+                           help="remove a passport from a .git/config")
+
+    args = arg_parser.parse_args()
+
+    config_file = os.path.expanduser("~/.gitpassport")
     config_preset(config_file)
     config_validate_scheme(config_file)
     config_validate_values(config_file)
-
     config = config_release(config_file)
 
     if config["enable_hook"]:
@@ -536,8 +573,26 @@ def main():
 
         git_infected()
 
-        if local_email and local_name:
+        if args.remove:
+            if local_email and local_name:
+                identity_exists(config, local_email, local_name, local_url)
+                git_config_remove()
+                print("ID removed")
+            else:
+                print("Nothing to remove")
+            sys.exit()
+
+        elif args.force:
+            if local_email and local_name:
+                identity_exists(config, local_email, local_name, local_url)
+            if local_url:
+                candidates = url_exists(config, local_url)
+            else:
+                candidates = no_url_exists(config, local_url)
+
+        elif local_email and local_name:
             identity_exists(config, local_email, local_name, local_url)
+            sys.exit()
         elif local_url:
             candidates = url_exists(config, local_url)
         else:
