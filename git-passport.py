@@ -102,43 +102,48 @@ def config_validate_scheme(filename):
     raw_config = configparser.ConfigParser()
     raw_config.read(filename)
 
-    whitelist = [{"General", "Passport"},
-                 {"email", "enable_hook", "name", "service", "sleep_duration"}]
+    whitelist_sections = frozenset(["General", "Passport"])
+    whitelist_options = frozenset(["email",
+                                   "enable_hook",
+                                   "name",
+                                   "service",
+                                   "sleep_duration"])
 
     # Create a list containing non-whitelisted section and option names
     pattern_section = r"^(Passport)\s[0-9]+$"
-    false_scheme = [[section  # Validate sections
-                     for section in raw_config.sections()
-                     if section not in whitelist[0]
-                     if not re.match(pattern_section, section)],
-                    [option  # Validate options
+    false_sections = {section
+                      for section in raw_config.sections()
+                      if section not in whitelist_sections
+                      if not re.match(pattern_section, section)}
+
+    false_options = {option
                      for section in raw_config.sections()
                      for option in raw_config.options(section)
-                     if option not in whitelist[1]]]
+                     if option not in whitelist_options}
 
     # Quit if we have wrong section names
-    if len(false_scheme[0]):
+    if len(false_sections):
         msg = """
             E > Configuration > Invalid sections:
             >>> {}
 
             Allowed sections (Passport sections scheme: "Passport 0"):
             >>> {}
-        """.format(", ".join(false_scheme[0]),
-                   ", ".join(whitelist[0]))
+        """.format(", ".join(false_sections),
+                   ", ".join(whitelist_sections))
         print(dedented(msg, "strip"))
         sys.exit()
 
     # Quit if we have wrong option names
-    if len(false_scheme[1]):
+    if len(false_options):
         msg = """
             E > Configuration > Invalid options:
             >>> {}
 
             Allowed options:
             >>> {}
-        """.format(", ".join(false_scheme[1]),
-                   ", ".join(whitelist[1]))
+        """.format(", ".join(false_options),
+                   ", ".join(whitelist_options))
         print(dedented(msg, "strip"))
         sys.exit()
 
