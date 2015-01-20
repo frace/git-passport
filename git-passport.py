@@ -90,7 +90,7 @@ def config_preset(filename):
         sys.exit("\n~Done~")
 
     except Exception:
-        sys.exit()
+        raise
 
 
 def config_validate_scheme(filename):
