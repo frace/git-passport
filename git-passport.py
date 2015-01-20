@@ -23,22 +23,24 @@ import urllib.parse
 def args_release():
     arg_parser = argparse.ArgumentParser(add_help=False)
     arg_parser.description = "manage multiple Git identities"
-    arg_parser.usage = "git passport (--help | --force | --remove)"
+    arg_parser.usage = "git passport (-h | --choose | --remove | --show)"
 
     arg_group = arg_parser.add_mutually_exclusive_group()
     arg_group.add_argument("-h",
-                           "--help",
                            action="help",
                            help="show this help message and exit")
-    arg_group.add_argument("-f",
-                           "--force",
+    arg_group.add_argument("-c",
+                           "--choose",
                            action="store_true",
-                           help="force to set a passport in a .git/config")
+                           help="choose a passport")
     arg_group.add_argument("-r",
                            "--remove",
                            action="store_true",
                            help="remove a passport from a .git/config")
-
+    arg_group.add_argument("-s",
+                           "--show",
+                           action="store_true",
+                           help="show the active passport set in .git/config")
     return arg_parser.parse_args()
 
 
@@ -317,23 +319,39 @@ def git_config_set(config, value, property):
         raise
 
 
-def git_config_remove():
+def git_config_remove(silent=True):
     """ Remove an existing Git identity.
 
         Raises:
             Exception: If subprocess.Popen() fails
     """
     try:
-        subprocess.Popen([
+        git_process = subprocess.Popen([
             "git",
             "config",
             "--local",
             "--remove-section",
             "user"
-        ], stdout=subprocess.PIPE)
+        ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+        # Captures the git return code
+        exit_status = git_process.wait()
 
     except Exception:
         raise
+
+    if not silent:
+        if exit_status == 128:
+            msg = """
+                No passport set.
+            """
+
+        elif exit_status == 0:
+            msg = """
+                Passport removed.
+            """
+
+        print(dedented(msg, "strip"))
 
 
 # ............................................................ Helper functions
@@ -463,7 +481,7 @@ def dedented(message, strip_type):
 
 
 # .............................................................. Implementation
-def identity_exists(config, email, name, url):
+def active_identity(config, email, name, url):
     """ Prints an existing ID of a local gitconfig.
 
         Args:
@@ -475,18 +493,22 @@ def identity_exists(config, email, name, url):
     duration = config["sleep_duration"]
 
     if not url:
-        url = "«remote.origin.url» is not set."
+        url = "Not set"
 
-    msg = """
-        ~Intermission~
+    if email and name:
+        msg = """
+            ~Active Passport:
+                . User:   {}
+                . E-Mail: {}
+                . Remote: {}
+        """
+        print(dedented(msg, "strip").format(name, email, url))
+    else:
+        msg = """
+            No passport set.
+        """
+        print(dedented(msg, "strip"))
 
-        ~Active Passport:
-            . User:   {}
-            . E-Mail: {}
-            . Remote: {}
-    """
-
-    print(dedented(msg, "lstrip").format(name, email, url))
     time.sleep(duration)
 
 
@@ -517,17 +539,15 @@ def url_exists(config, url):
 
     if len(candidates) >= 1:
         msg = """
-            ~Intermission~
-                One or more identities match your current git provider.
-                remote.origin.url: {}
+            One or more passports match your current Git provider.
+            remote.origin.url: {}
         """
         print(dedented(msg, "lstrip").format(url))
     else:
         candidates = local_passports
         msg = """
-            ~Intermission~
-                Zero passports matching - listing all passports.
-                remote.origin.url: {}
+            Zero suitable passports found - listing all passports.
+            remote.origin.url: {}
         """
 
         print(dedented(msg, "lstrip").format(url))
@@ -551,8 +571,7 @@ def no_url_exists(config, url):
     """
     candidates = config["git_passports"]
     msg = """
-        ~Intermission~
-            «remote.origin.url» is not set, listing all IDs:
+        «remote.origin.url» is not set, listing all passports:
     """
 
     print(dedented(msg, "lstrip"))
@@ -571,41 +590,34 @@ def main():
 
     if config["enable_hook"]:
         args = args_release()
+        git_infected()
+
         local_email = git_config_get(config, "local", "email")
         local_name = git_config_get(config, "local", "name")
         local_url = git_config_get(config, "local", "url")
 
-        git_infected()
-
-        if args.remove:
-            if local_email and local_name:
-                identity_exists(config, local_email, local_name, local_url)
-                git_config_remove()
-                print("ID removed")
-            else:
-                print("Nothing to remove")
+        if args.choose:
+            git_config_remove(silent=True)
+            local_name = None
+            local_email = None
+        elif args.remove:
+            git_config_remove(silent=False)
+            sys.exit()
+        elif args.show:
+            active_identity(config, local_email, local_name, local_url)
             sys.exit()
 
-        elif args.force:
-            if local_email and local_name:
-                identity_exists(config, local_email, local_name, local_url)
-            if local_url:
-                candidates = url_exists(config, local_url)
-            else:
-                candidates = no_url_exists(config, local_url)
-
-        elif local_email and local_name:
-            identity_exists(config, local_email, local_name, local_url)
+        if local_email and local_name:
+            active_identity(config, local_email, local_name, local_url)
             sys.exit()
         elif local_url:
             candidates = url_exists(config, local_url)
-        else:
+        elif not local_url:
             candidates = no_url_exists(config, local_url)
 
         selected_id = get_user_input(candidates.keys())
         git_config_set(config, candidates[selected_id]["email"], "email")
         git_config_set(config, candidates[selected_id]["name"], "name")
-        print("\n~Done~\n")
 
 
 if __name__ == "__main__":
