@@ -21,6 +21,11 @@ import urllib.parse
 
 # .......................................................... Argparse functions
 def args_release():
+    """ Define available arguments for the command line usage.
+
+        Returns:
+            args (obj): An object containing predefined args
+    """
     arg_parser = argparse.ArgumentParser(add_help=False)
     arg_parser.description = "manage multiple Git identities"
     arg_parser.usage = "git passport (-h | --choose | --remove | --show)"
@@ -41,7 +46,9 @@ def args_release():
                            "--show",
                            action="store_true",
                            help="show the active passport set in .git/config")
-    return arg_parser.parse_args()
+
+    args = arg_parser.parse_args()
+    return args
 
 
 # ............................................................ Config functions
