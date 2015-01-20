@@ -90,6 +90,25 @@ Adjust the existing sections and add as many git IDs as you like by following
 the section scheme.
 
 
+## Usage
+If you setup the script as a hook only it will be invoked automatically during
+each `git commit` command.
+You can pass the following options if you use it `git-passport` a Git command,too:
+```
+>:git passport -h
+usage: git passport (-h | --choose | --remove | --show)
+
+manage multiple Git identities
+
+optional arguments:
+  -h            show this help message and exit
+  -c, --choose  choose a passport
+  -r, --remove  remove a passport from a .git/config
+  -s, --show    show the active passport set in .git/config
+>:_
+```
+
+
 ## Bugs
 You are welcome to report bugs at the [project bugtracker][project-bugtracker]
 at github.com.
