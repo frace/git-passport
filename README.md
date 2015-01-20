@@ -91,9 +91,10 @@ the section scheme.
 
 
 ## Usage
-If you setup the script as a hook only it will be invoked automatically during
-each `git commit` command.
-You can pass the following options if you use it `git-passport` a Git command,too:
+If you setup the script as a hook only it will be invoked automatically
+during each `git commit` command.
+You can pass the following options if you use it `git-passport` as a Git
+command, too:
 ```
 >:git passport -h
 usage: git passport (-h | --choose | --remove | --show)
