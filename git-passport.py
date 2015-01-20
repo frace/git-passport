@@ -563,6 +563,7 @@ def add_global_id(config, target):
 
 # ........................................................................ Glue
 def main():
+    args = args_release()
     config_file = os.path.expanduser("~/.gitpassport")
     config_preset(config_file)
     config_validate_scheme(config_file)
@@ -570,7 +571,6 @@ def main():
     config = config_release(config_file)
 
     if config["enable_hook"]:
-        args = args_release()
         git_infected()
 
         local_email = git_config_get(config, "local", "email")
