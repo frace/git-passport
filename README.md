@@ -70,16 +70,16 @@ Generating a sample configuration file.
 The configuration file is rather self-explanatory:
 ```
 >:cat ~/.gitpassport
-[General]
+[general]
 enable_hook = True
-sleep_duration = 0.75
+sleep_duration = 0.5
 
-[Passport 0]
+[passport 0]
 email = email_0@example.com
 name = name_0
 service = github.com
 
-[Passport 1]
+[passport 1]
 email = email_1@example.com
 name = name_1
 service = gitlab.com

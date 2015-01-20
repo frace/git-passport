@@ -64,19 +64,19 @@ def config_preset(filename):
 
     preset = configparser.ConfigParser()
 
-    preset["General"] = {}
-    preset["General"]["enable_hook"] = "True"
-    preset["General"]["sleep_duration"] = "0.75"
+    preset["general"] = {}
+    preset["general"]["enable_hook"] = "True"
+    preset["general"]["sleep_duration"] = "0.75"
 
-    preset["Passport 0"] = {}
-    preset["Passport 0"]["email"] = "email_0@example.com"
-    preset["Passport 0"]["name"] = "name_0"
-    preset["Passport 0"]["service"] = "github.com"
+    preset["passport 0"] = {}
+    preset["passport 0"]["email"] = "email_0@example.com"
+    preset["passport 0"]["name"] = "name_0"
+    preset["passport 0"]["service"] = "github.com"
 
-    preset["Passport 1"] = {}
-    preset["Passport 1"]["email"] = "email_1@example.com"
-    preset["Passport 1"]["name"] = "name_1"
-    preset["Passport 1"]["service"] = "gitlab.com"
+    preset["passport 1"] = {}
+    preset["passport 1"]["email"] = "email_1@example.com"
+    preset["passport 1"]["name"] = "name_1"
+    preset["passport 1"]["service"] = "gitlab.com"
 
     try:
         msg = """
@@ -102,8 +102,8 @@ def config_validate_scheme(filename):
     raw_config = configparser.ConfigParser()
     raw_config.read(filename)
 
-    pattern_section = r"^(Passport)\s[0-9]+$"
-    whitelist_sections = frozenset(["General", "Passport"])
+    pattern_section = r"^(passport)\s[0-9]+$"
+    whitelist_sections = frozenset(["general", "passport"])
     whitelist_options = frozenset(["email",
                                    "enable_hook",
                                    "name",
@@ -126,7 +126,7 @@ def config_validate_scheme(filename):
             E > Configuration > Invalid sections:
             >>> {}
 
-            Allowed sections (Passport sections scheme: "Passport 0"):
+            Allowed sections (Passport sections scheme: "passport 0"):
             >>> {}
         """.format(", ".join(false_sections),
                    ", ".join(whitelist_sections))
@@ -160,7 +160,7 @@ def config_validate_values(filename):
             filename (str): The complete `filepath` of the configuration file
     """
     def filter_email(config):
-        pattern_section = r"^(Passport)\s[0-9]+$"
+        pattern_section = r"^(passport)\s[0-9]+$"
         pattern_email = r"[^@]+@[^@]+\.[^@]+"
         for section in config.sections():
             if re.match(pattern_section, section):
@@ -184,7 +184,7 @@ def config_validate_values(filename):
 
     # Quit if we have wrong boolean values
     try:
-        raw_config.getboolean("General", "enable_hook")
+        raw_config.getboolean("general", "enable_hook")
     except ValueError:
         msg = "E > Configuration > enable_hook: Expecting True or False."
         print(msg)
@@ -192,7 +192,7 @@ def config_validate_values(filename):
 
     # Quit if we have wrong float values
     try:
-        raw_config.getfloat("General", "sleep_duration")
+        raw_config.getfloat("general", "sleep_duration")
     except ValueError:
         msg = "E > Configuration > sleep_duration: Expecting float or number."
         print(msg)
@@ -210,7 +210,7 @@ def config_release(filename):
             config (dict): Contains all allowed configuration sections
     """
     def passport(config):
-        pattern_section = r"^(Passport)\s[0-9]+$"
+        pattern_section = r"^(passport)\s[0-9]+$"
         for passport in config.items():
             if re.match(pattern_section, passport[0]):
                 yield dict(passport[1])
@@ -219,8 +219,8 @@ def config_release(filename):
     raw_config.read(filename)
 
     config = {}
-    config["enable_hook"] = raw_config.getboolean("General", "enable_hook")
-    config["sleep_duration"] = raw_config.getfloat("General", "sleep_duration")
+    config["enable_hook"] = raw_config.getboolean("general", "enable_hook")
+    config["sleep_duration"] = raw_config.getfloat("general", "sleep_duration")
     config["git_passports"] = dict(enumerate(passport(raw_config)))
 
     return config
