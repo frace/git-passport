@@ -83,7 +83,6 @@ def config_preset(filename):
             No configuration file found.
             Generating a sample configuration file.
         """
-
         print(dedented(msg, "strip"))
         with open(filename, "w") as configfile:
             preset.write(configfile)
@@ -381,36 +380,36 @@ def print_choice(choice):
                 ~:Global ID: {}
                     . User:   {}
                     . E-Mail: {}
-            """
-            print(dedented(msg, "lstrip").format(
+            """.format(
                 key,
                 value["name"],
-                value["email"])
+                value["email"]
             )
+            print(dedented(msg, "lstrip"))
         elif not value.get("service"):
             msg = """
                 ~:Passport ID: {}
                     . User:   {}
                     . E-Mail: {}
-            """
-            print(dedented(msg, "lstrip").format(
+            """.format(
                 key,
                 value["name"],
-                value["email"])
+                value["email"]
             )
+            print(dedented(msg, "lstrip"))
         else:
             msg = """
                 ~Passport ID: {}
                     . User:    {}
                     . E-Mail:  {}
                     . Service: {}
-            """
-            print(dedented(msg, "lstrip").format(
+            """.format(
                 key,
                 value["name"],
                 value["email"],
-                value["service"])
+                value["service"]
             )
+            print(dedented(msg, "lstrip"))
 
 
 # ........................................................... Utility functions
@@ -456,8 +455,8 @@ def active_identity(config, email, name, url):
                 . User:   {}
                 . E-Mail: {}
                 . Remote: {}
-        """
-        print(dedented(msg, "strip").format(name, email, url))
+        """.format(name, email, url)
+        print(dedented(msg, "strip"))
     else:
         msg = "No passport set."
         print(msg)
@@ -494,16 +493,15 @@ def url_exists(config, url):
         msg = """
             One or more passports match your current Git provider.
             remote.origin.url: {}
-        """
-        print(dedented(msg, "lstrip").format(url))
+        """.format(url)
+        print(dedented(msg, "lstrip"))
     else:
         candidates = local_passports
         msg = """
             Zero suitable passports found - listing all passports.
             remote.origin.url: {}
-        """
-
-        print(dedented(msg, "lstrip").format(url))
+        """.format(url)
+        print(dedented(msg, "lstrip"))
         add_global_id(config, candidates)
 
     print_choice(candidates)
@@ -557,7 +555,6 @@ def add_global_id(config, target):
                 Consider to setup a global Git ID in order to get it listed
                 as a fallback passport.
         """
-
         print(dedented(msg, "lstrip"))
 
 
