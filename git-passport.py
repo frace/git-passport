@@ -338,7 +338,7 @@ def git_config_remove(silent=True):
         print(msg)
 
 
-# ............................................................ Helper functions
+# ............................................................ Dialog functions
 def get_user_input(pool):
     """ Prompt a user to select a number from a list of numbers representing
         available Git IDs. Optionally the user can choose `q` to quit the
@@ -413,36 +413,7 @@ def print_choice(choice):
             )
 
 
-def add_global_id(config, target):
-    """ If available add the global Git ID as a fallback ID to a
-        dictionary containing potential preselected candidates.
-
-        Args:
-            config (dict): Contains validated configuration options
-            target (dict): Contains preselected local Git IDs
-    """
-    global_email = git_config_get(config, "global", "email")
-    global_name = git_config_get(config, "global", "name")
-    local_passports = config["git_passports"]
-
-    if global_email and global_name:
-        position = len(local_passports)
-        target[position] = {}
-        target[position]["email"] = global_email
-        target[position]["name"] = global_name
-        target[position]["flag"] = "global"
-    else:
-        msg = """
-            ~Note
-                Tried to add your global Git ID as a passport candidate but
-                couldn't find one.
-                Consider to setup a global Git ID in order to get it listed
-                as a fallback passport.
-        """
-
-        print(dedented(msg, "lstrip"))
-
-
+# ........................................................... Utility functions
 def dedented(message, strip_type):
     """ Dedents a multiline string and strips leading (lstrip),
         trailing (rstrip) or leading and trailing characters (strip).
@@ -558,6 +529,36 @@ def no_url_exists(config, url):
     add_global_id(config, candidates)
     print_choice(candidates)
     return candidates
+
+
+def add_global_id(config, target):
+    """ If available add the global Git ID as a fallback ID to a
+        dictionary containing potential preselected candidates.
+
+        Args:
+            config (dict): Contains validated configuration options
+            target (dict): Contains preselected local Git IDs
+    """
+    global_email = git_config_get(config, "global", "email")
+    global_name = git_config_get(config, "global", "name")
+    local_passports = config["git_passports"]
+
+    if global_email and global_name:
+        position = len(local_passports)
+        target[position] = {}
+        target[position]["email"] = global_email
+        target[position]["name"] = global_name
+        target[position]["flag"] = "global"
+    else:
+        msg = """
+            ~Note
+                Tried to add your global Git ID as a passport candidate but
+                couldn't find one.
+                Consider to setup a global Git ID in order to get it listed
+                as a fallback passport.
+        """
+
+        print(dedented(msg, "lstrip"))
 
 
 # ........................................................................ Glue
