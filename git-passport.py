@@ -111,14 +111,15 @@ def config_validate_scheme(filename):
                                    "sleep_duration"])
 
     # Create sets containing non-whitelisted section and option names
-    false_sections = {section
-                      for section in raw_config.sections()
-                      if section not in whitelist_sections
-                      if not re.match(pattern_section, section)}
-    false_options = {option
-                     for section in raw_config.sections()
-                     for option in raw_config.options(section)
-                     if option not in whitelist_options}
+    false_sections = set([section
+                          for section in raw_config.sections()
+                          if section not in whitelist_sections
+                          if not re.match(pattern_section, section)])
+
+    false_options = set([option
+                         for section in raw_config.sections()
+                         for option in raw_config.options(section)
+                         if option not in whitelist_options])
 
     # Quit if we have wrong section names
     if len(false_sections):
@@ -171,7 +172,7 @@ def config_validate_values(filename):
     raw_config = configparser.ConfigParser()
     raw_config.read(filename)
 
-    false_email = list(filter_email(raw_config))
+    false_email = set(filter_email(raw_config))
 
     # Quit if we have wrong email addresses
     if len(false_email):
