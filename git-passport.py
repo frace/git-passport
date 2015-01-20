@@ -109,13 +109,13 @@ def config_validate_scheme(filename):
                                    "service",
                                    "sleep_duration"])
 
-    # Create a list containing non-whitelisted section and option names
     pattern_section = r"^(Passport)\s[0-9]+$"
+
+    # Create sets containing non-whitelisted section and option names
     false_sections = {section
                       for section in raw_config.sections()
                       if section not in whitelist_sections
                       if not re.match(pattern_section, section)}
-
     false_options = {option
                      for section in raw_config.sections()
                      for option in raw_config.options(section)
