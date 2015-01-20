@@ -257,16 +257,15 @@ def git_infected():
     except Exception:
         raise
 
-    if not exit_status:
+    if exit_status == 0:
         return
-
-    msg = """
-        The current directory does not seem to be a Git repository.
-        Nothing to do.
-    """
-
-    print(dedented(msg, "strip"))
-    sys.exit("\n~Quitting~")
+    elif exit_status == 128:
+        msg = """
+            The current directory does not seem to be a Git repository.
+            Nothing to do.
+        """
+        print(dedented(msg, "strip"))
+        sys.exit("\n~Quitting~")
 
 
 def git_config_get(config, scope, property):
@@ -348,14 +347,13 @@ def git_config_remove(silent=True):
         raise
 
     if not silent:
-        if exit_status == 128:
-            msg = """
-                No passport set.
-            """
-
-        elif exit_status == 0:
+        if exit_status == 0:
             msg = """
                 Passport removed.
+            """
+        elif exit_status == 128:
+            msg = """
+                No passport set.
             """
 
         print(dedented(msg, "strip"))
