@@ -90,7 +90,7 @@ def config_preset(filename):
         sys.exit("\n~Done~")
 
     except Exception:
-        sys.exit("\n~Quitting~")
+        sys.exit()
 
 
 def config_validate_scheme(filename):
@@ -125,8 +125,6 @@ def config_validate_scheme(filename):
 
             Allowed sections (Passport sections scheme: "Passport 0"):
             >>> {}
-
-            ~Quitting~
         """.format(", ".join(false_scheme[0]),
                    ", ".join(whitelist[0]))
         print(dedented(msg, "strip"))
@@ -140,8 +138,6 @@ def config_validate_scheme(filename):
 
             Allowed options:
             >>> {}
-
-            ~Quitting~
         """.format(", ".join(false_scheme[1]),
                    ", ".join(whitelist[1]))
         print(dedented(msg, "strip"))
@@ -179,8 +175,6 @@ def config_validate_values(filename):
         msg = """
             E > Configuration > Invalid email address:
             >>> {}
-
-            ~Quitting~
         """.format(", ".join(false_email))
         print(dedented(msg, "strip"))
         sys.exit()
@@ -189,24 +183,16 @@ def config_validate_values(filename):
     try:
         raw_config.getboolean("General", "enable_hook")
     except ValueError:
-        msg = """
-            E > Configuration > enable_hook: Expecting True or False.
-
-            ~Quitting~
-        """
-        print(dedented(msg, "strip"))
+        msg = "E > Configuration > enable_hook: Expecting True or False."
+        print(msg)
         sys.exit()
 
     # Quit if we have wrong float values
     try:
         raw_config.getfloat("General", "sleep_duration")
     except ValueError:
-        msg = """
-            E > Configuration > sleep_duration: Expecting float or number.
-
-            ~Quittting~
-        """
-        print(dedented(msg, "strip"))
+        msg = "E > Configuration > sleep_duration: Expecting float or number."
+        print(msg)
         sys.exit()
 
 
@@ -260,12 +246,9 @@ def git_infected():
     if exit_status == 0:
         return
     elif exit_status == 128:
-        msg = """
-            The current directory does not seem to be a Git repository.
-            Nothing to do.
-        """
-        print(dedented(msg, "strip"))
-        sys.exit("\n~Quitting~")
+        msg = "The current directory does not seem to be a Git repository."
+        print(msg)
+        sys.exit()
 
 
 def git_config_get(config, scope, property):
@@ -348,15 +331,11 @@ def git_config_remove(silent=True):
 
     if not silent:
         if exit_status == 0:
-            msg = """
-                Passport removed.
-            """
+            msg = "Passport removed."
         elif exit_status == 128:
-            msg = """
-                No passport set.
-            """
+            msg = "No passport set."
 
-        print(dedented(msg, "strip"))
+        print(msg)
 
 
 # ............................................................ Helper functions
@@ -381,7 +360,7 @@ def get_user_input(pool):
             selection = int(selection)
         except ValueError:
             if selection == "q" or selection == "quit":
-                sys.exit("\n~Quitting~\n")
+                sys.exit()
             continue
 
         if selection in pool:
@@ -509,10 +488,8 @@ def active_identity(config, email, name, url):
         """
         print(dedented(msg, "strip").format(name, email, url))
     else:
-        msg = """
-            No passport set.
-        """
-        print(dedented(msg, "strip"))
+        msg = "No passport set."
+        print(msg)
 
     time.sleep(duration)
 
@@ -575,11 +552,9 @@ def no_url_exists(config, url):
             candidates (dict): Contains preselected Git ID candidates
     """
     candidates = config["git_passports"]
-    msg = """
-        «remote.origin.url» is not set, listing all passports:
-    """
+    msg = "«remote.origin.url» is not set, listing all passports:\n"
 
-    print(dedented(msg, "lstrip"))
+    print(msg)
     add_global_id(config, candidates)
     print_choice(candidates)
     return candidates
