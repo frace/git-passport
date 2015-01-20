@@ -599,6 +599,8 @@ def main():
         selected_id = get_user_input(candidates.keys())
         git_config_set(config, candidates[selected_id]["email"], "email")
         git_config_set(config, candidates[selected_id]["name"], "name")
+    else:
+        print("git-passport is currently disabled.")
 
 
 if __name__ == "__main__":
