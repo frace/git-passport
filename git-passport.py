@@ -103,8 +103,8 @@ def config_validate_scheme(filename):
     raw_config = configparser.ConfigParser()
     raw_config.read(filename)
 
-    whitelist = [["General", "Passport"],
-                 ["email", "enable_hook", "name", "service", "sleep_duration"]]
+    whitelist = [{"General", "Passport"},
+                 {"email", "enable_hook", "name", "service", "sleep_duration"}]
 
     # Create a list containing non-whitelisted section and option names
     pattern_section = r"^(Passport)\s[0-9]+$"
