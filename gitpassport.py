@@ -60,7 +60,7 @@ def config_preset(filename):
             filename (str): The complete `filepath` of the configuration file
     """
     if os.path.exists(filename):
-        return
+        return False
 
     preset = configparser.ConfigParser()
 
@@ -86,7 +86,7 @@ def config_preset(filename):
         print(dedented(msg, "strip"))
         with open(filename, "w") as configfile:
             preset.write(configfile)
-        sys.exit("\n~Done~")
+        return True
 
     except Exception:
         raise
@@ -567,10 +567,13 @@ def add_global_id(config, target):
 def main():
     args = args_release()
     config_file = os.path.expanduser("~/.gitpassport")
-    config_preset(config_file)
-    config_validate_scheme(config_file)
-    config_validate_values(config_file)
-    config = config_release(config_file)
+
+    if config_preset(config_file):
+        sys.exit("\n~Done~")
+    else:
+        config_validate_scheme(config_file)
+        config_validate_values(config_file)
+        config = config_release(config_file)
 
     if config["enable_hook"]:
         git_infected()
