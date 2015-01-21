@@ -58,9 +58,13 @@ def config_preset(filename):
 
         Args:
             filename (str): The complete `filepath` of the configuration file
+
+        Returns:
+            True (bool): If the configfile exists already
+            False (bool): If a new configfile was successfully created
     """
     if os.path.exists(filename):
-        return False
+        return True
 
     preset = configparser.ConfigParser()
 
@@ -86,7 +90,7 @@ def config_preset(filename):
         print(dedented(msg, "strip"))
         with open(filename, "w") as configfile:
             preset.write(configfile)
-        return True
+        return False
 
     except Exception:
         raise
@@ -569,11 +573,11 @@ def main():
     config_file = os.path.expanduser("~/.gitpassport")
 
     if config_preset(config_file):
-        sys.exit("\n~Done~")
-    else:
         config_validate_scheme(config_file)
         config_validate_values(config_file)
         config = config_release(config_file)
+    else:
+        sys.exit("\n~Done~")
 
     if config["enable_hook"]:
         git_infected()
