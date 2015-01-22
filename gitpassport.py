@@ -611,9 +611,9 @@ if __name__ == "__main__":
             sys.exit(0)
 
         if args.choose:
-            git_config_remove(silent=True)
             local_name = None
             local_email = None
+            git_config_remove(silent=True)
 
         if local_email and local_name:
             active_identity(config, local_email, local_name, local_url)
