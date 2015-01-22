@@ -496,7 +496,7 @@ def dedented(message, strip_type):
 
 
 # .............................................................. Implementation
-def active_identity(config, email, name, url):
+def active_identity(config, email, name, url, style=None):
     """ Prints an existing ID of a local gitconfig.
 
         Args:
@@ -521,7 +521,9 @@ def active_identity(config, email, name, url):
                 . E-Mail: {}
                 . Remote: {}
         """.format(name, email, url)
-        print(dedented(msg, "lstrip"))
+
+        strip = "strip" if style == "compact" else "lstrip"
+        print(dedented(msg, strip))
     else:
         msg = "No passport set."
         print(msg)
@@ -652,20 +654,32 @@ if __name__ == "__main__":
         local_name = git_config_get(config, "local", "name")
         local_url = git_config_get(config, "local", "url")
 
-        if args.remove:
-            git_config_remove(silent=False)
-            sys.exit(0)
-
         if args.choose:
             local_name = None
             local_email = None
             git_config_remove(silent=True)
 
-        if (
-            args.show or
-            local_email and local_name
-        ):
-            active_identity(config, local_email, local_name, local_url)
+        if args.remove:
+            git_config_remove(silent=False)
+            sys.exit(0)
+
+        if args.show:
+            active_identity(
+                config,
+                local_email,
+                local_name,
+                local_url,
+                style="compact"
+            )
+            sys.exit(0)
+
+        if local_email and local_name:
+            active_identity(
+                config,
+                local_email,
+                local_name,
+                local_url
+            )
             sys.exit(0)
 
         if local_url:
