@@ -587,41 +587,41 @@ if __name__ == "__main__":
     args = args_release()
     config_file = os.path.expanduser("~/.gitpassport")
 
-    if config_preset(config_file):
-        if not config_validate_scheme(config_file):
-            sys.exit(1)
-        if not config_validate_values(config_file):
-            sys.exit(1)
-        config = config_release(config_file)
+    if (
+        not config_preset(config_file) or
+        not config_validate_scheme(config_file) or
+        not config_validate_values(config_file) or
+        not git_infected()
+    ):
+        sys.exit(1)
     else:
-        print("\n~Done~")
-        sys.exit(0)
+        config = config_release(config_file)
 
     if config["enable_hook"]:
-        if not git_infected():
-            sys.exit(1)
-
         local_email = git_config_get(config, "local", "email")
         local_name = git_config_get(config, "local", "name")
         local_url = git_config_get(config, "local", "url")
+
+        if args.remove:
+            git_config_remove(silent=False)
+            sys.exit(0)
+
+        if args.show:
+            active_identity(config, local_email, local_name, local_url)
+            sys.exit(0)
 
         if args.choose:
             git_config_remove(silent=True)
             local_name = None
             local_email = None
-        elif args.remove:
-            git_config_remove(silent=False)
-            sys.exit(0)
-        elif args.show:
-            active_identity(config, local_email, local_name, local_url)
-            sys.exit(0)
 
         if local_email and local_name:
             active_identity(config, local_email, local_name, local_url)
             sys.exit(0)
-        elif local_url:
+
+        if local_url:
             candidates = url_exists(config, local_url)
-        elif not local_url:
+        else:
             candidates = no_url_exists(config, local_url)
 
         selected_id = get_user_input(candidates.keys())
