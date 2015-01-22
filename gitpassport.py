@@ -337,6 +337,9 @@ def git_config_set(config, value, property):
             value (str): A name or email address
             property (str): Type of `email` or `name`
 
+        Returns:
+            True (bool): On success
+
         Raises:
             Exception: If subprocess.Popen() fails
     """
@@ -352,9 +355,14 @@ def git_config_set(config, value, property):
     except Exception:
         raise
 
+    return True
+
 
 def git_config_remove(silent=True):
     """ Remove an existing Git identity.
+
+        Returns:
+            True (bool): On success
 
         Raises:
             Exception: If subprocess.Popen() fails
@@ -381,6 +389,8 @@ def git_config_remove(silent=True):
 
     except Exception:
         raise
+
+    return True
 
 
 # ............................................................ Dialog functions
@@ -421,6 +431,9 @@ def print_choice(choice):
 
         Args:
             choice (dict): Contains a list of preselected Git ID candidates
+
+        Returns:
+            True (bool): On success
     """
     for key, value in choice.items():
         if value.get("flag") == "global":
@@ -459,6 +472,8 @@ def print_choice(choice):
             )
             print(dedented(msg, "lstrip"))
 
+    return True
+
 
 # ........................................................... Utility functions
 def dedented(message, strip_type):
@@ -489,6 +504,10 @@ def active_identity(config, email, name, url):
             email (str): An email address
             name (str): A name
             url (str): A remote.origin.url
+
+        Returns:
+            True (bool): If an active passport could be found
+            False (bool): If an active passport could not be found
     """
     duration = config["sleep_duration"]
 
@@ -506,8 +525,10 @@ def active_identity(config, email, name, url):
     else:
         msg = "No passport set."
         print(msg)
+        return False
 
     time.sleep(duration)
+    return True
 
 
 def url_exists(config, url):
@@ -582,6 +603,10 @@ def add_global_id(config, target):
         Args:
             config (dict): Contains validated configuration options
             target (dict): Contains preselected local Git IDs
+
+        Returns:
+            True (bool): If a global Git ID could be found
+            False (bool): If a global Git ID could not be found
     """
     global_email = git_config_get(config, "global", "email")
     global_name = git_config_get(config, "global", "name")
@@ -602,6 +627,9 @@ def add_global_id(config, target):
                 as a fallback passport.
         """
         print(dedented(msg, "lstrip"))
+        return False
+
+    return True
 
 
 # ........................................................................ Glue
