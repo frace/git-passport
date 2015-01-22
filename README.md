@@ -60,7 +60,7 @@ your home directory:
 ```
 >:cd ~/.git/hooks/bin/git-passport
 >:./gitpassport.py
-No configuration file found.
+No configuration file found in ~/.
 Generating a sample configuration file.
 >:_
 ```

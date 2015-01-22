@@ -84,7 +84,7 @@ def config_preset(filename):
 
     try:
         msg = """
-            No configuration file found.
+            No configuration file found ~/.
             Generating a sample configuration file.
         """
         print(dedented(msg, "strip"))
