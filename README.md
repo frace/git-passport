@@ -62,8 +62,6 @@ your home directory:
 >:./gitpassport.py
 No configuration file found.
 Generating a sample configuration file.
-
-~Done~
 >:_
 ```
 
@@ -86,7 +84,7 @@ service = gitlab.com
 >:_
 ```
 
-Adjust the existing sections and add as many git IDs as you like by following
+Adjust the existing sections and add as many passports as you like by following
 the section scheme.
 
 
@@ -119,9 +117,8 @@ at github.com.
 
 * * *
 ## Credits:
-+ Hook idea inspired by [ORR SELLA][credits-1]
-+ Idea grew at [stackoverflow.com][credits-2]
-+ Code reviewed at [codereview.stackexchange.com][credits-3]
++ Inspired by [ORR SELLA][credits-1]
++ Grew at [stackoverflow.com][credits-2]
 
 [credits-1]: https://orrsella.com/2013/08/10/git-using-different-user-emails-for-different-repositories/
 [credits-2]: http://stackoverflow.com/questions/4220416/can-i-specify-multiple-users-for-myself-in-gitconfig/23107012#23107012
