@@ -31,21 +31,32 @@ def args_release():
     arg_parser.usage = "git passport (-h | --choose | --remove | --show)"
 
     arg_group = arg_parser.add_mutually_exclusive_group()
-    arg_group.add_argument("-h",
-                           action="help",
-                           help="show this help message and exit")
-    arg_group.add_argument("-c",
-                           "--choose",
-                           action="store_true",
-                           help="choose a passport")
-    arg_group.add_argument("-r",
-                           "--remove",
-                           action="store_true",
-                           help="remove a passport from a .git/config")
-    arg_group.add_argument("-s",
-                           "--show",
-                           action="store_true",
-                           help="show the active passport set in .git/config")
+    arg_group.add_argument(
+        "-h",
+        action="help",
+        help="show this help message and exit"
+    )
+
+    arg_group.add_argument(
+        "-c",
+        "--choose",
+        action="store_true",
+        help="choose a passport"
+    )
+
+    arg_group.add_argument(
+        "-r",
+        "--remove",
+        action="store_true",
+        help="remove a passport from a .git/config"
+    )
+
+    arg_group.add_argument(
+        "-s",
+        "--show",
+        action="store_true",
+        help="show the active passport set in .git/config"
+    )
 
     args = arg_parser.parse_args()
     return args
@@ -111,23 +122,33 @@ def config_validate_scheme(filename):
     raw_config.read(filename)
 
     pattern_section = r"^(passport)\s[0-9]+$"
-    whitelist_sections = frozenset(["general", "passport"])
-    whitelist_options = frozenset(["email",
-                                   "enable_hook",
-                                   "name",
-                                   "service",
-                                   "sleep_duration"])
+    whitelist_sections = frozenset([
+        "general",
+        "passport"
+    ])
+
+    whitelist_options = frozenset([
+        "email",
+        "enable_hook",
+        "name",
+        "service",
+        "sleep_duration"
+    ])
 
     # Create sets containing non-whitelisted section and option names
-    false_sections = set([section
-                          for section in raw_config.sections()
-                          if section not in whitelist_sections
-                          if not re.match(pattern_section, section)])
+    false_sections = set([
+        section
+        for section in raw_config.sections()
+        if section not in whitelist_sections
+        if not re.match(pattern_section, section)
+    ])
 
-    false_options = set([option
-                         for section in raw_config.sections()
-                         for option in raw_config.options(section)
-                         if option not in whitelist_options])
+    false_options = set([
+        option
+        for section in raw_config.sections()
+        for option in raw_config.options(section)
+        if option not in whitelist_options
+    ])
 
     # Quit if we have wrong section names
     if len(false_sections):
