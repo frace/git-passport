@@ -285,15 +285,15 @@ def git_infected():
         # Captures the git return code
         exit_status = git_process.wait()
 
+        if exit_status == 0:
+            return True
+        elif exit_status == 128:
+            msg = "The current directory does not seem to be a Git repository."
+            print(msg)
+            return False
+
     except Exception:
         raise
-
-    if exit_status == 0:
-        return True
-    elif exit_status == 128:
-        msg = "The current directory does not seem to be a Git repository."
-        print(msg)
-        return False
 
 
 def git_config_get(config, scope, property):
