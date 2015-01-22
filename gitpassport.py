@@ -492,22 +492,22 @@ def print_choice(choice):
 
 # ........................................................... Utility functions
 def dedented(message, strip_type):
-    """ Dedents a multiline string and strips leading (lstrip),
-        trailing (rstrip) or leading and trailing characters (strip).
+    """ Dedents a multiline string and strips leading (lstrip)
+        or leading and trailing characters (strip).
 
         Args:
             message (str): An arbitrary string
             strip_type (str): Defines the type of strip()
 
         Returns:
-            A stripped and dedented string
+            string (str): A stripped and dedented string
     """
     if strip_type == "strip":
-        return textwrap.dedent(message).strip()
+        string = textwrap.dedent(message).strip()
     elif strip_type == "lstrip":
-        return textwrap.dedent(message).lstrip()
-    elif strip_type == "rstrip":
-        return textwrap.dedent(message).rstrip()
+        string = textwrap.dedent(message).lstrip()
+
+    return string
 
 
 # .............................................................. Implementation
