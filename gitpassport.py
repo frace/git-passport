@@ -160,8 +160,10 @@ def config_validate_scheme(filename):
 
             Allowed sections (Passport sections scheme: "passport 0"):
             >>> {}
-        """.format(", ".join(false_sections),
-                   ", ".join(whitelist_sections))
+        """.format(
+            ", ".join(false_sections),
+            ", ".join(whitelist_sections)
+        )
 
         print(dedented(msg, "strip"))
         return False
@@ -174,8 +176,10 @@ def config_validate_scheme(filename):
 
             Allowed options:
             >>> {}
-        """.format(", ".join(false_options),
-                   ", ".join(whitelist_options))
+        """.format(
+            ", ".join(false_options),
+            ", ".join(whitelist_options)
+        )
 
         print(dedented(msg, "strip"))
         return False
@@ -532,7 +536,11 @@ def active_identity(config, email, name, url, style=None):
                 . User:   {}
                 . E-Mail: {}
                 . Remote: {}
-        """.format(name, email, url)
+        """.format(
+            name,
+            email,
+            url
+        )
 
         print(dedented(msg, strip))
     else:
