@@ -577,7 +577,8 @@ if __name__ == "__main__":
         config_validate_values(config_file)
         config = config_release(config_file)
     else:
-        sys.exit("\n~Done~")
+        print("\n~Done~")
+        sys.exit(0)
 
     if config["enable_hook"]:
         git_infected()
@@ -592,14 +593,14 @@ if __name__ == "__main__":
             local_email = None
         elif args.remove:
             git_config_remove(silent=False)
-            sys.exit()
+            sys.exit(0)
         elif args.show:
             active_identity(config, local_email, local_name, local_url)
-            sys.exit()
+            sys.exit(0)
 
         if local_email and local_name:
             active_identity(config, local_email, local_name, local_url)
-            sys.exit()
+            sys.exit(0)
         elif local_url:
             candidates = url_exists(config, local_url)
         elif not local_url:
