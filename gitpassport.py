@@ -371,16 +371,16 @@ def git_config_remove(silent=True):
         # Captures the git return code
         exit_status = git_process.wait()
 
+        if not silent:
+            if exit_status == 0:
+                msg = "Passport removed."
+            elif exit_status == 128:
+                msg = "No passport set."
+
+            print(msg)
+
     except Exception:
         raise
-
-    if not silent:
-        if exit_status == 0:
-            msg = "Passport removed."
-        elif exit_status == 128:
-            msg = "No passport set."
-
-        print(msg)
 
 
 # ............................................................ Dialog functions
@@ -404,13 +404,14 @@ def get_user_input(pool):
 
         try:
             selection = int(selection)
+
+            if selection in pool:
+                return selection
+
         except ValueError:
             if selection == "q" or selection == "quit":
                 return None
             continue
-
-        if selection in pool:
-            return selection
 
 
 def print_choice(choice):
