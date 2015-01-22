@@ -410,7 +410,7 @@ def get_user_input(pool):
         #  Redirect sys.stdin to an open filehandle from which input() can read
         sys.stdin = open("/dev/tty")
         selection = input("» Select an [ID] or enter «(q)uit» to exit: ")
-        sys.stdin = sys.__stdin__  # Reset the stdin to its default value
+        sys.stdin = sys.__stdin__  # Reset sys.stdin to its default value
 
         try:
             selection = int(selection)
@@ -521,7 +521,7 @@ def active_identity(config, email, name, url):
                 . E-Mail: {}
                 . Remote: {}
         """.format(name, email, url)
-        print(dedented(msg, "strip"))
+        print(dedented(msg, "lstrip"))
     else:
         msg = "No passport set."
         print(msg)
