@@ -447,18 +447,7 @@ def print_choice(choice):
                 value["email"]
             )
             print(dedented(msg, "lstrip"))
-        elif not value.get("service"):
-            msg = """
-                ~:Passport ID: {}
-                    . User:   {}
-                    . E-Mail: {}
-            """.format(
-                key,
-                value["name"],
-                value["email"]
-            )
-            print(dedented(msg, "lstrip"))
-        else:
+        elif value.get("service"):
             msg = """
                 ~Passport ID: {}
                     . User:    {}
@@ -469,6 +458,17 @@ def print_choice(choice):
                 value["name"],
                 value["email"],
                 value["service"]
+            )
+            print(dedented(msg, "lstrip"))
+        else:
+            msg = """
+                ~:Passport ID: {}
+                    . User:   {}
+                    . E-Mail: {}
+            """.format(
+                key,
+                value["name"],
+                value["email"]
             )
             print(dedented(msg, "lstrip"))
 
