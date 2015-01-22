@@ -98,7 +98,9 @@ def config_preset(filename):
             No configuration file found ~/.
             Generating a sample configuration file.
         """
+
         print(dedented(msg, "strip"))
+
         with open(filename, "w") as configfile:
             preset.write(configfile)
         return False
@@ -160,6 +162,7 @@ def config_validate_scheme(filename):
             >>> {}
         """.format(", ".join(false_sections),
                    ", ".join(whitelist_sections))
+
         print(dedented(msg, "strip"))
         return False
 
@@ -173,6 +176,7 @@ def config_validate_scheme(filename):
             >>> {}
         """.format(", ".join(false_options),
                    ", ".join(whitelist_options))
+
         print(dedented(msg, "strip"))
         return False
 
@@ -215,6 +219,7 @@ def config_validate_values(filename):
             E > Configuration > Invalid email address:
             >>> {}
         """.format(", ".join(false_email))
+
         print(dedented(msg, "strip"))
         return False
 
@@ -223,6 +228,7 @@ def config_validate_values(filename):
         raw_config.getboolean("general", "enable_hook")
     except ValueError:
         msg = "E > Configuration > enable_hook: Expecting True or False."
+
         print(msg)
         return False
 
@@ -231,6 +237,7 @@ def config_validate_values(filename):
         raw_config.getfloat("general", "sleep_duration")
     except ValueError:
         msg = "E > Configuration > sleep_duration: Expecting float or number."
+
         print(msg)
         return False
 
@@ -289,6 +296,7 @@ def git_infected():
             return True
         elif exit_status == 128:
             msg = "The current directory does not seem to be a Git repository."
+
             print(msg)
             return False
 
@@ -446,6 +454,7 @@ def print_choice(choice):
                 value["name"],
                 value["email"]
             )
+
             print(dedented(msg, "lstrip"))
         elif value.get("service"):
             msg = """
@@ -459,6 +468,7 @@ def print_choice(choice):
                 value["email"],
                 value["service"]
             )
+
             print(dedented(msg, "lstrip"))
         else:
             msg = """
@@ -470,6 +480,7 @@ def print_choice(choice):
                 value["name"],
                 value["email"]
             )
+
             print(dedented(msg, "lstrip"))
 
     return True
@@ -510,6 +521,7 @@ def active_identity(config, email, name, url, style=None):
             False (bool): If an active passport could not be found
     """
     duration = config["sleep_duration"]
+    strip = "strip" if style == "compact" else "lstrip"
 
     if not url:
         url = "Not set"
@@ -522,10 +534,10 @@ def active_identity(config, email, name, url, style=None):
                 . Remote: {}
         """.format(name, email, url)
 
-        strip = "strip" if style == "compact" else "lstrip"
         print(dedented(msg, strip))
     else:
         msg = "No passport set."
+
         print(msg)
         return False
 
@@ -563,6 +575,7 @@ def url_exists(config, url):
             One or more passports match your current Git provider.
             remote.origin.url: {}
         """.format(url)
+
         print(dedented(msg, "lstrip"))
     else:
         candidates = local_passports
@@ -570,6 +583,7 @@ def url_exists(config, url):
             Zero suitable passports found - listing all passports.
             remote.origin.url: {}
         """.format(url)
+
         print(dedented(msg, "lstrip"))
         add_global_id(config, candidates)
 
@@ -595,6 +609,7 @@ def no_url_exists(config, url):
     print(msg)
     add_global_id(config, candidates)
     print_choice(candidates)
+
     return candidates
 
 
@@ -628,6 +643,7 @@ def add_global_id(config, target):
                 Consider to setup a global Git ID in order to get it listed
                 as a fallback passport.
         """
+
         print(dedented(msg, "lstrip"))
         return False
 
