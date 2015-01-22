@@ -568,7 +568,7 @@ def add_global_id(config, target):
 
 
 # ........................................................................ Glue
-def main():
+if __name__ == "__main__":
     args = args_release()
     config_file = os.path.expanduser("~/.gitpassport")
 
@@ -610,7 +610,3 @@ def main():
         git_config_set(config, candidates[selected_id]["name"], "name")
     else:
         print("git-passport is currently disabled.")
-
-
-if __name__ == "__main__":
-    main()
