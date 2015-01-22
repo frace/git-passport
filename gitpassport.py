@@ -102,6 +102,10 @@ def config_validate_scheme(filename):
 
         Args:
             filename (str): The complete `filepath` of the configuration file
+
+        Returns:
+            True (bool): If the configfile contains valid sections and options
+            False (bool): If the configfile contains false sections or options
     """
     raw_config = configparser.ConfigParser()
     raw_config.read(filename)
@@ -136,7 +140,7 @@ def config_validate_scheme(filename):
         """.format(", ".join(false_sections),
                    ", ".join(whitelist_sections))
         print(dedented(msg, "strip"))
-        sys.exit()
+        return False
 
     # Quit if we have wrong option names
     if len(false_options):
@@ -149,7 +153,9 @@ def config_validate_scheme(filename):
         """.format(", ".join(false_options),
                    ", ".join(whitelist_options))
         print(dedented(msg, "strip"))
-        sys.exit()
+        return False
+
+    return True
 
 
 def config_validate_values(filename):
@@ -163,6 +169,10 @@ def config_validate_values(filename):
 
         Args:
             filename (str): The complete `filepath` of the configuration file
+
+        Returns:
+            True (bool): If the configfile contains valid values
+            False (bool): If the configfile contains invalid values
     """
     def filter_email(config):
         pattern_section = r"^(passport)\s[0-9]+$"
@@ -185,7 +195,7 @@ def config_validate_values(filename):
             >>> {}
         """.format(", ".join(false_email))
         print(dedented(msg, "strip"))
-        sys.exit()
+        return False
 
     # Quit if we have wrong boolean values
     try:
@@ -193,7 +203,7 @@ def config_validate_values(filename):
     except ValueError:
         msg = "E > Configuration > enable_hook: Expecting True or False."
         print(msg)
-        sys.exit()
+        return False
 
     # Quit if we have wrong float values
     try:
@@ -201,7 +211,9 @@ def config_validate_values(filename):
     except ValueError:
         msg = "E > Configuration > sleep_duration: Expecting float or number."
         print(msg)
-        sys.exit()
+        return False
+
+    return True
 
 
 def config_release(filename):
@@ -235,6 +247,10 @@ def config_release(filename):
 def git_infected():
     """ Checks if the current directory is under Git version control.
 
+        Returns:
+            True (bool): If the current directory is a Git repository
+            False (bool): If the current directory is not a Git repository
+
         Raises:
             Exception: If subprocess.Popen() fails
     """
@@ -252,11 +268,11 @@ def git_infected():
         raise
 
     if exit_status == 0:
-        return
+        return True
     elif exit_status == 128:
         msg = "The current directory does not seem to be a Git repository."
         print(msg)
-        sys.exit()
+        return False
 
 
 def git_config_get(config, scope, property):
@@ -356,6 +372,7 @@ def get_user_input(pool):
             pool (list): A list of numbers representing available Git IDs
 
         Returns:
+            None (NoneType): If the user quits the selection dialog
             selection (int): A number representing a Git ID chosen by a user
     """
     while True:
@@ -368,7 +385,7 @@ def get_user_input(pool):
             selection = int(selection)
         except ValueError:
             if selection == "q" or selection == "quit":
-                sys.exit()
+                return None
             continue
 
         if selection in pool:
@@ -439,8 +456,6 @@ def dedented(message, strip_type):
         return textwrap.dedent(message).lstrip()
     elif strip_type == "rstrip":
         return textwrap.dedent(message).rstrip()
-    else:
-        return
 
 
 # .............................................................. Implementation
@@ -573,15 +588,18 @@ if __name__ == "__main__":
     config_file = os.path.expanduser("~/.gitpassport")
 
     if config_preset(config_file):
-        config_validate_scheme(config_file)
-        config_validate_values(config_file)
+        if not config_validate_scheme(config_file):
+            sys.exit(1)
+        if not config_validate_values(config_file):
+            sys.exit(1)
         config = config_release(config_file)
     else:
         print("\n~Done~")
         sys.exit(0)
 
     if config["enable_hook"]:
-        git_infected()
+        if not git_infected():
+            sys.exit(1)
 
         local_email = git_config_get(config, "local", "email")
         local_name = git_config_get(config, "local", "name")
@@ -607,7 +625,10 @@ if __name__ == "__main__":
             candidates = no_url_exists(config, local_url)
 
         selected_id = get_user_input(candidates.keys())
-        git_config_set(config, candidates[selected_id]["email"], "email")
-        git_config_set(config, candidates[selected_id]["name"], "name")
+        if selected_id is not None:
+            git_config_set(config, candidates[selected_id]["email"], "email")
+            git_config_set(config, candidates[selected_id]["name"], "name")
+            sys.exit(0)
     else:
         print("git-passport is currently disabled.")
+        sys.exit(1)
