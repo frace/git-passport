@@ -28,7 +28,7 @@ def args_release():
     """
     arg_parser = argparse.ArgumentParser(add_help=False)
     arg_parser.description = "manage multiple Git identities"
-    arg_parser.usage = "git passport (-h | --choose | --remove | --show)"
+    arg_parser.usage = "git passport (--select | --delete | --active | --passports)"
 
     arg_group = arg_parser.add_mutually_exclusive_group()
     arg_group.add_argument(
@@ -38,24 +38,31 @@ def args_release():
     )
 
     arg_group.add_argument(
-        "-c",
-        "--choose",
-        action="store_true",
-        help="choose a passport"
-    )
-
-    arg_group.add_argument(
-        "-r",
-        "--remove",
-        action="store_true",
-        help="remove a passport from a .git/config"
-    )
-
-    arg_group.add_argument(
         "-s",
-        "--show",
+        "--select",
         action="store_true",
-        help="show the active passport set in .git/config"
+        help="select a passport"
+    )
+
+    arg_group.add_argument(
+        "-d",
+        "--delete",
+        action="store_true",
+        help="delete the active passport in .git/config"
+    )
+
+    arg_group.add_argument(
+        "-a",
+        "--active",
+        action="store_true",
+        help="print the active passport in .git/config"
+    )
+
+    arg_group.add_argument(
+        "-p",
+        "--passports",
+        action="store_true",
+        help="print all passports in ~/.gitpassport"
     )
 
     args = arg_parser.parse_args()
@@ -370,7 +377,7 @@ def git_config_set(config, value, property):
     return True
 
 
-def git_config_remove(silent=True):
+def git_config_remove(verbose=True):
     """ Remove an existing Git identity.
 
         Returns:
@@ -391,7 +398,7 @@ def git_config_remove(silent=True):
         # Captures the git return code
         exit_status = git_process.wait()
 
-        if not silent:
+        if verbose:
             if exit_status == 0:
                 msg = "Passport removed."
             elif exit_status == 128:
@@ -599,14 +606,13 @@ def url_exists(config, url):
     return candidates
 
 
-def no_url_exists(config, url):
+def no_url_exists(config):
     """ If a local gitconfig does not contain a remote.origin.url add
         all available user defined Git IDs and the global Git ID as
         candidates.
 
         Args:
             config (dict): Contains validated configuration options
-            url (str): A remote.origin.url
 
         Returns:
             candidates (dict): Contains preselected Git ID candidates
@@ -678,16 +684,16 @@ if __name__ == "__main__":
         local_name = git_config_get(config, "local", "name")
         local_url = git_config_get(config, "local", "url")
 
-        if args.choose:
+        if args.select:
             local_name = None
             local_email = None
-            git_config_remove(silent=True)
+            git_config_remove(verbose=False)
 
-        if args.remove:
-            git_config_remove(silent=False)
+        if args.delete:
+            git_config_remove()
             sys.exit(0)
 
-        if args.show:
+        if args.active:
             active_identity(
                 config,
                 local_email,
@@ -696,6 +702,10 @@ if __name__ == "__main__":
                 style="compact"
             )
             sys.exit(0)
+
+        if args.passports:
+            print_choice(config["git_passports"])
+            exit(0)
 
         if local_email and local_name:
             active_identity(
@@ -709,7 +719,7 @@ if __name__ == "__main__":
         if local_url:
             candidates = url_exists(config, local_url)
         else:
-            candidates = no_url_exists(config, local_url)
+            candidates = no_url_exists(config)
 
         selected_id = get_user_input(candidates.keys())
         if selected_id is not None:
