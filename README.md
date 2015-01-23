@@ -95,15 +95,16 @@ You can pass the following options if you use `gitpassport.py` as a Git
 command, too:
 ```
 >:git passport -h
-usage: git passport (-h | --choose | --remove | --show)
+usage: git passport (--select | --delete | --active | --passports)
 
 manage multiple Git identities
 
 optional arguments:
-  -h            show this help message and exit
-  -c, --choose  choose a passport
-  -r, --remove  remove a passport from a .git/config
-  -s, --show    show the active passport set in .git/config
+  -h               show this help message and exit
+  -s, --select     select a passport
+  -d, --delete     delete the active passport in .git/config
+  -a, --active     print the active passport in .git/config
+  -p, --passports  print all passports in ~/.gitpassport
 >:_
 ```
 
