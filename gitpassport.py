@@ -431,11 +431,12 @@ def get_user_input(pool):
             selection (int): A number representing a Git ID chosen by a user
     """
     while True:
+        # Redirect sys.stdin to an open filehandle from which input()
+        # is able to read
+        sys.stdin = open("/dev/tty")
+        selection = input("» Select an [ID] or enter «(q)uit» to exit: ")
+
         try:
-            # Redirect sys.stdin to an open filehandle from which input()
-            # is able to read
-            sys.stdin = open("/dev/tty")
-            selection = input("» Select an [ID] or enter «(q)uit» to exit: ")
             selection = int(selection)
 
             if selection in pool:
