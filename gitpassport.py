@@ -117,6 +117,9 @@ def config_preset(filename):
     except Exception:
         raise
 
+    finally:
+        configfile.close()
+
 
 def config_validate_scheme(filename):
     """ Validate section and option names of a provided configuration file.
