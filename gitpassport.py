@@ -426,12 +426,11 @@ def get_user_input(pool):
             selection (int): A number representing a Git ID chosen by a user
     """
     while True:
-        #  Redirect sys.stdin to an open filehandle from which input() can read
-        sys.stdin = open("/dev/tty")
-        selection = input("» Select an [ID] or enter «(q)uit» to exit: ")
-        sys.stdin = sys.__stdin__  # Reset sys.stdin to its default value
-
         try:
+            # Redirect sys.stdin to an open filehandle from which input()
+            # is able to read
+            sys.stdin = open("/dev/tty")
+            selection = input("» Select an [ID] or enter «(q)uit» to exit: ")
             selection = int(selection)
 
             if selection in pool:
@@ -441,6 +440,11 @@ def get_user_input(pool):
             if selection == "q" or selection == "quit":
                 return None
             continue
+
+        # Reset sys.stdin to its default value, even if we return early
+        # when an exception occurs
+        finally:
+            sys.stdin = sys.__stdin__
 
 
 def print_choice(choice):
