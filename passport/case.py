@@ -6,8 +6,8 @@ import time
 import urllib.parse
 
 from . import (
+    configuration,
     dialog,
-    git,
     util
 )
 
@@ -95,7 +95,7 @@ def url_exists(config, url):
         """.format(url)
 
         print(util.dedented(msg, "lstrip"))
-        git.add_global_id(config, candidates)
+        configuration.add_global_id(config, candidates)
 
     dialog.print_choice(candidates)
     return candidates
@@ -116,7 +116,7 @@ def no_url_exists(config):
     msg = "«remote.origin.url» is not set, listing all passports:\n"
 
     print(msg)
-    git.add_global_id(config, candidates)
+    configuration.add_global_id(config, candidates)
     dialog.print_choice(candidates)
 
     return candidates

@@ -14,7 +14,7 @@ if __name__ == "__main__":
     from passport import (
         arg,
         case,
-        config,
+        configuration,
         dialog,
         git
     )
@@ -23,14 +23,14 @@ if __name__ == "__main__":
     config_file = os.path.expanduser("~/.gitpassport")
 
     if (
-        not config.preset(config_file) or
-        not config.validate_scheme(config_file) or
-        not config.validate_values(config_file) or
+        not configuration.preset(config_file) or
+        not configuration.validate_scheme(config_file) or
+        not configuration.validate_values(config_file) or
         not git.infected()
     ):
         sys.exit(1)
     else:
-        config = config.release(config_file)
+        config = configuration.release(config_file)
 
     if config["enable_hook"]:
         local_email = git.config_get(config, "local", "email")

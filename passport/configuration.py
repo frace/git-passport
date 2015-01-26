@@ -6,7 +6,10 @@ import configparser
 import os.path
 import re
 
-from . import util
+from . import (
+    git,
+    util
+)
 
 
 # ............................................................ Config functions
@@ -223,3 +226,40 @@ def release(filename):
     config["git_passports"] = dict(enumerate(passport(raw_config)))
 
     return config
+
+
+def add_global_id(config, target):
+    """ If available add the global Git ID as a fallback ID to a
+        dictionary containing potential preselected candidates.
+
+        Args:
+            config (dict): Contains validated configuration options
+            target (dict): Contains preselected local Git IDs
+
+        Returns:
+            True (bool): If a global Git ID could be found
+            False (bool): If a global Git ID could not be found
+    """
+    global_email = git.config_get(config, "global", "email")
+    global_name = git.config_get(config, "global", "name")
+    local_passports = config["git_passports"]
+
+    if global_email and global_name:
+        position = len(local_passports)
+        target[position] = {}
+        target[position]["email"] = global_email
+        target[position]["name"] = global_name
+        target[position]["flag"] = "global"
+    else:
+        msg = """
+            ~Note
+                Tried to add your global Git ID as a passport candidate but
+                couldn't find one.
+                Consider to setup a global Git ID in order to get it listed
+                as a fallback passport.
+        """
+
+        print(util.dedented(msg, "lstrip"))
+        return False
+
+    return True
