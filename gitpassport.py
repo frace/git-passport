@@ -6,25 +6,17 @@
     Git users / user identities.
 """
 
-
-import sys
-import os.path
-
-from passport import arg
-from passport import case
-from passport import config
-from passport import dialog
-from passport import git
-
-# import passport.arg as arg
-# import passport.case as case
-# import passport.config as config
-# import passport.dialog as dialog
-# import passport.git as git
-
-
 # ........................................................................ Glue
 if __name__ == "__main__":
+    import sys
+    import os.path
+
+    from passport import arg
+    from passport import case
+    from passport import config
+    from passport import dialog
+    from passport import git
+
     args = arg.release()
     config_file = os.path.expanduser("~/.gitpassport")
 
