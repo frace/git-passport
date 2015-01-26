@@ -4,6 +4,8 @@
 # ..................................................................... Imports
 import subprocess
 
+import passport.util as util
+
 
 # ............................................................... Git functions
 def infected():
@@ -147,8 +149,8 @@ def add_global_id(config, target):
             True (bool): If a global Git ID could be found
             False (bool): If a global Git ID could not be found
     """
-    global_email = git_config_get(config, "global", "email")
-    global_name = git_config_get(config, "global", "name")
+    global_email = config_get(config, "global", "email")
+    global_name = config_get(config, "global", "name")
     local_passports = config["git_passports"]
 
     if global_email and global_name:
@@ -166,7 +168,7 @@ def add_global_id(config, target):
                 as a fallback passport.
         """
 
-        print(dedented(msg, "lstrip"))
+        print(util.dedented(msg, "lstrip"))
         return False
 
     return True

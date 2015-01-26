@@ -5,6 +5,10 @@
 import time
 import urllib.parse
 
+import passport.dialog as dialog
+import passport.git as git
+import passport.util as util
+
 
 # .............................................................. Implementation
 def active_identity(config, email, name, url, style=None):
@@ -38,7 +42,7 @@ def active_identity(config, email, name, url, style=None):
             url
         )
 
-        print(dedented(msg, strip))
+        print(util.dedented(msg, strip))
     else:
         msg = "No passport set."
 
@@ -80,7 +84,7 @@ def url_exists(config, url):
             remote.origin.url: {}
         """.format(url)
 
-        print(dedented(msg, "lstrip"))
+        print(util.dedented(msg, "lstrip"))
     else:
         candidates = local_passports
         msg = """
@@ -88,10 +92,10 @@ def url_exists(config, url):
             remote.origin.url: {}
         """.format(url)
 
-        print(dedented(msg, "lstrip"))
-        add_global_id(config, candidates)
+        print(util.dedented(msg, "lstrip"))
+        git.add_global_id(config, candidates)
 
-    print_choice(candidates)
+    dialog.print_choice(candidates)
     return candidates
 
 
@@ -110,7 +114,7 @@ def no_url_exists(config):
     msg = "«remote.origin.url» is not set, listing all passports:\n"
 
     print(msg)
-    add_global_id(config, candidates)
-    print_choice(candidates)
+    git.add_global_id(config, candidates)
+    dialog.print_choice(candidates)
 
     return candidates

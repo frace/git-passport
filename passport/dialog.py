@@ -4,6 +4,8 @@
 # ..................................................................... Imports
 import sys
 
+import passport.util as util
+
 
 # ............................................................ Dialog functions
 def get_input(pool):
@@ -64,7 +66,7 @@ def print_choice(choice):
                 value["email"]
             )
 
-            print(dedented(msg, "lstrip"))
+            print(util.dedented(msg, "lstrip"))
         elif value.get("service"):
             msg = """
                 ~Passport ID: {}
@@ -78,7 +80,7 @@ def print_choice(choice):
                 value["service"]
             )
 
-            print(dedented(msg, "lstrip"))
+            print(util.dedented(msg, "lstrip"))
         else:
             msg = """
                 ~:Passport ID: {}
@@ -90,6 +92,6 @@ def print_choice(choice):
                 value["email"]
             )
 
-            print(dedented(msg, "lstrip"))
+            print(util.dedented(msg, "lstrip"))
 
     return True

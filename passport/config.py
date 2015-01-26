@@ -6,6 +6,8 @@ import configparser
 import os.path
 import re
 
+import passport.util as util
+
 
 # ............................................................ Config functions
 def preset(filename):
@@ -44,7 +46,7 @@ def preset(filename):
             Generating a sample configuration file.
         """
 
-        print(dedented(msg, "strip"))
+        print(util.dedented(msg, "strip"))
 
         with open(filename, "w") as configfile:
             preset.write(configfile)
@@ -113,7 +115,7 @@ def validate_scheme(filename):
             ", ".join(whitelist_sections)
         )
 
-        print(dedented(msg, "strip"))
+        print(util.dedented(msg, "strip"))
         return False
 
     # Quit if we have wrong option names
@@ -129,7 +131,7 @@ def validate_scheme(filename):
             ", ".join(whitelist_options)
         )
 
-        print(dedented(msg, "strip"))
+        print(util.dedented(msg, "strip"))
         return False
 
     return True
@@ -172,7 +174,7 @@ def validate_values(filename):
             >>> {}
         """.format(", ".join(false_email))
 
-        print(dedented(msg, "strip"))
+        print(util.dedented(msg, "strip"))
         return False
 
     # Quit if we have wrong boolean values
