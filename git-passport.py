@@ -6,7 +6,6 @@
     Git users / user identities.
 """
 
-# ........................................................................ Glue
 if __name__ == "__main__":
     import sys
     import os.path

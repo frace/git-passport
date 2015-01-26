@@ -12,7 +12,7 @@ from . import (
 )
 
 
-# .............................................................. Implementation
+# .............................................................. Case functions
 def active_identity(config, email, name, url, style=None):
     """ Prints an existing ID of a local gitconfig.
 
