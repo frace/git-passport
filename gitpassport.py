@@ -10,11 +10,17 @@
 import sys
 import os.path
 
-import passport.arg as arg
-import passport.case as case
-import passport.config as config
-import passport.dialog as dialog
-import passport.git as git
+from passport import arg
+from passport import case
+from passport import config
+from passport import dialog
+from passport import git
+
+# import passport.arg as arg
+# import passport.case as case
+# import passport.config as config
+# import passport.dialog as dialog
+# import passport.git as git
 
 
 # ........................................................................ Glue

@@ -5,9 +5,9 @@
 import time
 import urllib.parse
 
-import passport.dialog as dialog
-import passport.git as git
-import passport.util as util
+from . import dialog
+from . import git
+from . import util
 
 
 # .............................................................. Implementation

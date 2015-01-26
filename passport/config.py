@@ -6,7 +6,7 @@ import configparser
 import os.path
 import re
 
-import passport.util as util
+from . import util
 
 
 # ............................................................ Config functions

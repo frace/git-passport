@@ -4,7 +4,7 @@
 # ..................................................................... Imports
 import sys
 
-import passport.util as util
+from . import util
 
 
 # ............................................................ Dialog functions

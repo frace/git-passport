@@ -4,7 +4,7 @@
 # ..................................................................... Imports
 import subprocess
 
-import passport.util as util
+from . import util
 
 
 # ............................................................... Git functions
