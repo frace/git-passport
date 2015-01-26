@@ -7,7 +7,7 @@ users / user identities.
 ```
 >:mkdir -p ~/.git/hooks/bin && cd $_
 >:git clone git://github.com/frace/git-passport.git
->:chmod +x ./git-passport/gitpassport.py
+>:chmod +x ./git-passport/git-passport.py
 >:_
 ```
 
@@ -17,7 +17,7 @@ There are many ways to handle your hooks. What I do in oder to work with
 multiple hooks is the following solution:
 ```
 >:mkdir -p ~/.git/hooks/pre-commit.d && cd $_
->:ln -sf ~/.git/hooks/bin/git-passport/gitpassport.py ./00-gitpassport
+>:ln -sf ~/.git/hooks/bin/git-passport/git-passport.py ./00-git-passport
 >:mkdir -p ~/.git/templates/hooks && cd $_
 >:touch pre-commit && chmod +x $_
 >:_
@@ -28,7 +28,7 @@ alias in order to be able to execute the script manually as a «native» git
 command by invoking `git passport`:
 ```
 [alias]
-    passport = !${HOME}/.git/hooks/bin/git-passport/gitpassport.py
+    passport = !${HOME}/.git/hooks/bin/git-passport/git-passport.py
 
 [init]
     templatedir = ~/.git/templates
@@ -55,11 +55,11 @@ If you want to apply the hook to already exisiting repos then just run
 
 
 ## Configuration
-On the first run `gitpassport.py` generates a sample configuration file inside
+On the first run `git-passport.py` generates a sample configuration file inside
 your home directory:
 ```
 >:cd ~/.git/hooks/bin/git-passport
->:./gitpassport.py
+>:./git-passport.py
 No configuration file found in ~/.
 Generating a sample configuration file.
 >:_
@@ -91,7 +91,7 @@ the section scheme.
 ## Usage
 If you setup the script as a hook only it will be invoked automatically
 during each `git commit` command.
-You can pass the following options if you use `gitpassport.py` as a Git
+You can pass the following options if you use `git-passport.py` as a Git
 command, too:
 ```
 >:git passport -h
