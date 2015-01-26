@@ -5,9 +5,11 @@
 import time
 import urllib.parse
 
-from . import dialog
-from . import git
-from . import util
+from . import (
+    dialog,
+    git,
+    util
+)
 
 
 # .............................................................. Implementation

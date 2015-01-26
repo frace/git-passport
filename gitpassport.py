@@ -11,11 +11,13 @@ if __name__ == "__main__":
     import sys
     import os.path
 
-    from passport import arg
-    from passport import case
-    from passport import config
-    from passport import dialog
-    from passport import git
+    from passport import (
+        arg,
+        case,
+        config,
+        dialog,
+        git
+    )
 
     args = arg.release()
     config_file = os.path.expanduser("~/.gitpassport")
