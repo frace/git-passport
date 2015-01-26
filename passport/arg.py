@@ -13,9 +13,9 @@ def release():
     """
     arg_parser = argparse.ArgumentParser(add_help=False)
     arg_parser.description = "manage multiple Git identities"
-    arg_parser.usage = """
-        git passport (--select | --delete | --active | --passports)
-    """
+    arg_parser.usage = (
+        "git passport (--select | --delete | --active | --passports)"
+    )
 
     arg_group = arg_parser.add_mutually_exclusive_group()
     arg_group.add_argument(
