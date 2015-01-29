@@ -5,22 +5,20 @@ users / user identities.
 
 ## Get it!
 ```
->:mkdir -p ~/.git/hooks/bin && cd $_
->:git clone git://github.com/frace/git-passport.git
->:chmod +x ./git-passport/git-passport.py
->:_
+mkdir -p ~/.git/hooks/bin && cd $_
+git clone git://github.com/frace/git-passport.git
+chmod +x ./git-passport/git-passport.py
 ```
 
 
 ## Installation
-There are many ways to handle your hooks. What I do in oder to work with
+There are many ways to handle your hooks. What I do in order to work with
 multiple hooks is the following solution:
 ```
->:mkdir -p ~/.git/hooks/pre-commit.d && cd $_
->:ln -sf ~/.git/hooks/bin/git-passport/git-passport.py ./00-git-passport
->:mkdir -p ~/.git/templates/hooks && cd $_
->:touch pre-commit && chmod +x $_
->:_
+mkdir -p ~/.git/hooks/pre-commit.d && cd $_
+ln -sf ~/.git/hooks/bin/git-passport/git-passport.py ./00-git-passport
+mkdir -p ~/.git/templates/hooks && cd $_
+touch pre-commit && chmod +x $_
 ```
 
 Add the Git template directory path into your `~/.gitconfig` and create an
@@ -37,7 +35,6 @@ command by invoking `git passport`:
 In `~/.git/templates/hooks/pre-commit` I put a little bash script which
 loads one hook after another:
 ```
->:cat ~/.git/templates/hooks/pre-commit
 #!/usr/bin/env bash
 
 hooks_pre_commit="${HOME}/.git/hooks/pre-commit.d/"
@@ -45,7 +42,6 @@ hooks_pre_commit="${HOME}/.git/hooks/pre-commit.d/"
 for hook in ${hooks_pre_commit}*; do
     "$hook"
 done
->:_
 ```
 
 Afterwards each `git init` or `git clone` command will distribute
@@ -58,16 +54,14 @@ If you want to apply the hook to already exisiting repos then just run
 On the first run `git-passport.py` generates a sample configuration file inside
 your home directory:
 ```
->:cd ~/.git/hooks/bin/git-passport
->:./git-passport.py
-No configuration file found in ~/.
-Generating a sample configuration file.
->:_
+cd ~/.git/hooks/bin/git-passport
+./git-passport.py
+   No configuration file found in ~/.
+   Generating a sample configuration file.
 ```
 
-The configuration file is rather self-explanatory:
+The configuration file `~/.gitpassport` is rather self-explanatory:
 ```
->:cat ~/.gitpassport
 [general]
 enable_hook = True
 sleep_duration = 0.5
@@ -81,7 +75,6 @@ service = github.com
 email = email_1@example.com
 name = name_1
 service = gitlab.com
->:_
 ```
 
 Adjust the existing sections and add as many passports as you like by following
@@ -94,18 +87,17 @@ during each `git commit` command.
 You can pass the following options if you use `git-passport.py` as a Git
 command, too:
 ```
->:git passport -h
-usage: git passport (--select | --delete | --active | --passports)
+git passport -h
+   usage: git passport (--select | --delete | --active | --passports)
 
-manage multiple Git identities
+   manage multiple Git identities
 
-optional arguments:
-  -h               show this help message and exit
-  -s, --select     select a passport
-  -d, --delete     delete the active passport in .git/config
-  -a, --active     print the active passport in .git/config
-  -p, --passports  print all passports in ~/.gitpassport
->:_
+   optional arguments:
+     -h               show this help message and exit
+     -s, --select     select a passport
+     -d, --delete     delete the active passport in .git/config
+     -a, --active     print the active passport in .git/config
+     -p, --passports  print all passports in ~/.gitpassport
 ```
 
 
