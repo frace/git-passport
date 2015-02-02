@@ -76,7 +76,7 @@ def validate_scheme(filename):
     raw_config = configparser.ConfigParser()
     raw_config.read(filename)
 
-    pattern_section = r"^(passport)\s[0-9]+$"
+    pattern_section = r"^passport\s\".*\"$"
     whitelist_sections = frozenset([
         "general",
         "passport"
@@ -212,9 +212,14 @@ def release(filename):
             config (dict): Contains all allowed configuration sections
     """
     def passport(config):
-        pattern_section = r"^(passport)\s[0-9]+$"
+        pattern_section = r"^passport\s\"(.*)\"$"
         for passport in config.items():
             if re.match(pattern_section, passport[0]):
+                passport[1]["service"] = re.match(
+                    pattern_section,
+                    passport[0]
+                ).group(1)
+
                 yield dict(passport[1])
 
     raw_config = configparser.ConfigParser()

@@ -72,8 +72,11 @@ def url_exists(config, url):
     # Let's see if user defined IDs match remote.origin.url
     def gen_candidates(ids, url):
         for key, value in ids.items():
-            if value.get("service") == url:
-                yield (key, value)
+            services = frozenset(value.get("service").split(","))
+            for service in services:
+                if service.strip() in url:
+                    value["service"] = service.strip()
+                    yield (key, value)
 
     local_passports = config["git_passports"]
     netloc = urllib.parse.urlparse(url)[1]

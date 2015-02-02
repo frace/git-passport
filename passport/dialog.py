@@ -57,37 +57,23 @@ def print_choice(choice):
     for key, value in choice.items():
         if value.get("flag") == "global":
             msg = """
-                ~:Global ID: {}
+                ~:Global passport:
                     . User:   {}
                     . E-Mail: {}
             """.format(
-                key,
                 value["name"],
                 value["email"]
             )
 
             print(util.dedented(msg, "lstrip"))
-        elif value.get("service"):
+
+        if value.get("service"):
             msg = """
-                ~Passport ID: {}
+                ~Passport:     {}
                     . User:    {}
                     . E-Mail:  {}
-                    . Service: {}
             """.format(
-                key,
-                value["name"],
-                value["email"],
-                value["service"]
-            )
-
-            print(util.dedented(msg, "lstrip"))
-        else:
-            msg = """
-                ~:Passport ID: {}
-                    . User:   {}
-                    . E-Mail: {}
-            """.format(
-                key,
+                value["service"],
                 value["name"],
                 value["email"]
             )
