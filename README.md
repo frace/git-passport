@@ -65,6 +65,7 @@ The configuration file `~/.gitpassport` is rather self-explanatory:
 [general]
 enable_hook = True
 sleep_duration = 0.5
+quiet = False
 
 [passport 0]
 email = email_0@example.com
@@ -76,6 +77,8 @@ email = email_1@example.com
 name = name_1
 service = gitlab.com
 ```
+
+Setting `quiet` to `True` will stop `git-passport.py` from printing the active passport upon default execution (To see the active passport with `quiet` enabled, you must pass the `-a` option).
 
 Adjust the existing sections and add as many passports as you like by following
 the section scheme.

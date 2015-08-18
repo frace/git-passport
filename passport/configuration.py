@@ -32,6 +32,7 @@ def preset(filename):
     preset["general"] = {}
     preset["general"]["enable_hook"] = "True"
     preset["general"]["sleep_duration"] = "0.75"
+    preset["general"]["quiet"] = "False"
 
     preset["passport 0"] = {}
     preset["passport 0"]["email"] = "email_0@example.com"
@@ -87,7 +88,8 @@ def validate_scheme(filename):
         "enable_hook",
         "name",
         "service",
-        "sleep_duration"
+        "sleep_duration",
+        "quiet"
     ])
 
     # Create sets containing non-whitelisted section and option names
@@ -148,6 +150,7 @@ def validate_values(filename):
             email: E-Mail scheme
             sleep_duration: Float
             enable_hook: Boolean
+            quiet: Boolean
 
         Args:
             filename (str): The complete `filepath` of the configuration file
@@ -188,6 +191,14 @@ def validate_values(filename):
 
         print(msg)
         return False
+    
+    try:
+        raw_config.getboolean("general", "quiet")
+    except ValueError:
+        msg = "E > Configuration > quiet: Expecting True or False."
+
+        print(msg)
+        return False
 
     # Quit if we have wrong float values
     try:
@@ -222,6 +233,7 @@ def release(filename):
 
     config = {}
     config["enable_hook"] = raw_config.getboolean("general", "enable_hook")
+    config["quiet"] = raw_config.getboolean("general", "quiet")
     config["sleep_duration"] = raw_config.getfloat("general", "sleep_duration")
     config["git_passports"] = dict(enumerate(passport(raw_config)))
 

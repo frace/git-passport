@@ -60,12 +60,13 @@ if __name__ == "__main__":
             exit(0)
 
         if local_email and local_name:
-            case.active_identity(
-                config,
-                local_email,
-                local_name,
-                local_url
-            )
+            if not config["quiet"]:
+                case.active_identity(
+                    config,
+                    local_email,
+                    local_name,
+                    local_url
+                )
             sys.exit(0)
 
         if local_url:
