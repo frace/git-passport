@@ -3,7 +3,11 @@
 
 # ..................................................................... Imports
 import time
-import urllib.parse
+#import urllib.parse
+try:
+        from urllib.parse import urlparse
+except ImportError:
+        from urlparse import urlparse
 
 from . import (
     configuration,
