@@ -59,11 +59,13 @@ def print_choice(choice):
             msg = """
                 ~:Global ID: {}
                     . User:   {}
-                    . E-Mail: {}
+                    . E-Mail: {}{}
             """.format(
                 key,
                 value["name"],
-                value["email"]
+                value["email"],
+                """
+                    . no_remote: true""" if value["no_remote"] else ''
             )
 
             print(util.dedented(msg, "lstrip"))
@@ -72,12 +74,14 @@ def print_choice(choice):
                 ~Passport ID: {}
                     . User:    {}
                     . E-Mail:  {}
-                    . Service: {}
+                    . Service: {}{}
             """.format(
                 key,
                 value["name"],
                 value["email"],
-                value["service"]
+                value["service"],
+                """
+                    . no_remote: true""" if value["no_remote"] else ''
             )
 
             print(util.dedented(msg, "lstrip"))
@@ -85,11 +89,13 @@ def print_choice(choice):
             msg = """
                 ~:Passport ID: {}
                     . User:   {}
-                    . E-Mail: {}
+                    . E-Mail: {}{}
             """.format(
                 key,
                 value["name"],
-                value["email"]
+                value["email"],
+                """
+                    . no_remote: true""" if value["no_remote"] else ''
             )
 
             print(util.dedented(msg, "lstrip"))

@@ -43,6 +43,12 @@ def preset(filename):
     preset["passport 1"]["name"] = "name_1"
     preset["passport 1"]["service"] = "gitlab.com"
 
+    preset["passport 2"] = {}
+    preset["passport 2"]["email"] = "email_2@example.com"
+    preset["passport 2"]["name"] = "name_2"
+    preset["passport 2"]["no_remote"] = "true"
+    preset["passport 2"]["service"] = ".*"
+
     try:
         msg = """
             No configuration file found ~/.
@@ -87,7 +93,8 @@ def validate_scheme(filename):
         "enable_hook",
         "name",
         "service",
-        "sleep_duration"
+        "sleep_duration",
+        "no_remote"
     ])
 
     # Create sets containing non-whitelisted section and option names
@@ -148,6 +155,7 @@ def validate_values(filename):
             email: E-Mail scheme
             sleep_duration: Float
             enable_hook: Boolean
+            no_remote: Boolean
 
         Args:
             filename (str): The complete `filepath` of the configuration file
@@ -156,33 +164,41 @@ def validate_values(filename):
             True (bool): If the configfile contains valid values
             False (bool): If the configfile contains invalid values
     """
-    def filter_email(config):
+    def filter_section(config):
         pattern_section = r"^(passport)\s[0-9]+$"
         pattern_email = r"[^@]+@[^@]+\.[^@]+"
         for section in config.sections():
             if re.match(pattern_section, section):
+                # Check email
                 email = config.get(section, "email")
                 if not re.match(pattern_email, email):
-                    yield email
+                    yield ('email address', email)
+                # Check no_remote    
+                try:
+                    # cannot use default of config.get because it overwrites
+                    # fallbacks ('DEFAULT' section)
+                    no_remote = config.get(section, "no_remote")
+                except configparser.NoOptionError:
+                    pass
+                else:
+                    # no_remote exists, now check valye
+                    try:
+                        no_remote = config.getboolean(section, "no_remote")
+                    except ValueError:
+                        yield ("no_remote", no_remote)
 
     raw_config = configparser.ConfigParser()
     raw_config.read(filename)
 
-    false_email = set(filter_email(raw_config))
-
-    # Quit if we have wrong email addresses
-    if len(false_email):
-        msg = """
-            E > Configuration > Invalid email address:
-            >>> {}
-        """.format(", ".join(false_email))
-
-        print(util.dedented(msg, "strip"))
+    # Quit if we have wrong section config
+    for option_name, value in filter_section(raw_config):
+        msg = "E > Configuration > Invalid {}: {}".format(option_name, value)
+        print(msg)
         return False
 
     # Quit if we have wrong boolean values
     try:
-        raw_config.getboolean("general", "enable_hook")
+        raw_config.getboolean("general", 'enable_hook')
     except ValueError:
         msg = "E > Configuration > enable_hook: Expecting True or False."
 
@@ -213,9 +229,11 @@ def release(filename):
     """
     def passport(config):
         pattern_section = r"^(passport)\s[0-9]+$"
-        for passport in config.items():
-            if re.match(pattern_section, passport[0]):
-                yield dict(passport[1])
+        for name, section in config.items():
+            if re.match(pattern_section, name):
+                d = dict(section)
+                d["no_remote"] = section.getboolean("no_remote", fallback=False) 
+                yield d
 
     raw_config = configparser.ConfigParser()
     raw_config.read(filename)
