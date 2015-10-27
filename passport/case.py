@@ -3,7 +3,6 @@
 
 # ..................................................................... Imports
 import time
-import urllib.parse
 
 from . import (
     configuration,
@@ -76,9 +75,8 @@ def url_exists(config, url):
                 yield (key, value)
 
     local_passports = config["git_passports"]
-    netloc = urllib.parse.urlparse(url)[1]
 
-    candidates = dict(gen_candidates(local_passports, netloc))
+    candidates = dict(gen_candidates(local_passports, url))
 
     if len(candidates) >= 1:
         msg = """
