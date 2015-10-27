@@ -2,6 +2,7 @@
 
 
 # ..................................................................... Imports
+import re
 import time
 import urllib.parse
 
@@ -72,7 +73,7 @@ def url_exists(config, url):
     # Let's see if user defined IDs match remote.origin.url
     def gen_candidates(ids, url):
         for key, value in ids.items():
-            if value.get("service") == url:
+            if re.search(value.get("service"), url):
                 yield (key, value)
 
     local_passports = config["git_passports"]
