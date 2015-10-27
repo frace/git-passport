@@ -72,8 +72,12 @@ if __name__ == "__main__":
             candidates = case.url_exists(config, local_url)
         else:
             candidates = case.no_url_exists(config)
-
-        selected_id = dialog.get_input(candidates.keys())
+        
+        if args.select or len(candidates) > 1:
+            dialog.print_choice(candidates)
+            selected_id = dialog.get_input(candidates.keys())
+        else:
+            selected_id = next(iter(candidates.keys()))
         if selected_id is not None:
             git.config_set(config, candidates[selected_id]["email"], "email")
             git.config_set(config, candidates[selected_id]["name"], "name")

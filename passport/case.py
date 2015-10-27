@@ -97,7 +97,6 @@ def url_exists(config, url):
         print(util.dedented(msg, "lstrip"))
         configuration.add_global_id(config, candidates)
 
-    dialog.print_choice(candidates)
     return candidates
 
 
@@ -112,11 +111,21 @@ def no_url_exists(config):
         Returns:
             candidates (dict): Contains preselected Git ID candidates
     """
-    candidates = config["git_passports"]
-    msg = "«remote.origin.url» is not set, listing all passports:\n"
+    def gen_candidates(ids):
+        for key, value in ids.items():
+            if value.get('no_remote', False):
+                yield (key, value)
 
-    print(msg)
-    configuration.add_global_id(config, candidates)
-    dialog.print_choice(candidates)
+    local_passports = config["git_passports"]
+    candidates = dict(gen_candidates(local_passports))
+    if candidates:
+        msg = "«remote.origin.url» is not set, listing all passports with «no_remote» set:\n"
+    else:
+        msg = "«remote.origin.url» is not set, listing all passports:\n"
+        candidates = local_passports
+        configuration.add_global_id(config, candidates)
+
+    if len(candidates) > 1:
+        print(msg)
 
     return candidates
