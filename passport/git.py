@@ -86,18 +86,24 @@ def config_set(config, value, property):
             Exception: If subprocess.Popen() fails
     """
     try:
-        subprocess.Popen([
+        git_process = subprocess.Popen([
             "git",
             "config",
             "--local",
             "user." + property,
             value
-        ], stdout=subprocess.PIPE)
+        ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+        # Captures the git return code
+        exit_status = git_process.wait()
 
     except Exception:
         raise
 
-    return True
+    if exit_status == 0:
+        return True
+    else:
+        return False
 
 
 def config_remove(verbose=True):
