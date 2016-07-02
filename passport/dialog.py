@@ -24,7 +24,7 @@ def get_input(pool):
         # Redirect sys.stdin to an open filehandle from which input()
         # is able to read
         sys.stdin = open("/dev/tty")
-        selection = input("» Select an [ID] or enter «(q)uit» to exit: ")
+        selection = input("» Select an ([ID]) or enter «(q)uit» to exit: ")
 
         try:
             selection = int(selection)
@@ -57,10 +57,11 @@ def print_choice(choice):
     for key, value in choice.items():
         if value.get("flag") == "global":
             msg = """
-                ~:Global passport:
+                ~:Global passport ({}):
                     . User:   {}
                     . E-Mail: {}
             """.format(
+                key,
                 value["name"],
                 value["email"]
             )
@@ -69,10 +70,12 @@ def print_choice(choice):
 
         if value.get("service"):
             msg = """
-                ~Passport:     {}
+                ~Passport: ({})
+                    . Service: {}
                     . User:    {}
                     . E-Mail:  {}
             """.format(
+                key,
                 value["service"],
                 value["name"],
                 value["email"]
