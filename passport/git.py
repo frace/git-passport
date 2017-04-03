@@ -86,13 +86,14 @@ def config_set(config, value, property):
             Exception: If subprocess.Popen() fails
     """
     try:
-        subprocess.Popen([
+        config = subprocess.Popen([
             "git",
             "config",
             "--local",
             "user." + property,
             value
         ], stdout=subprocess.PIPE)
+        config.wait()
 
     except Exception:
         raise
