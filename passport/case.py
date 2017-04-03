@@ -76,7 +76,16 @@ def url_exists(config, url):
                 yield (key, value)
 
     local_passports = config["git_passports"]
-    netloc = urllib.parse.urlparse(url)[1]
+
+    # For a lot of SSH git clones the scheme is implicit in the URLs provided to
+    # copy-paste from the website (ie. git@github.com:project/name.git) -
+    # without the explicit ssh:// on the front urllib doesn't play nice with
+    # the URL
+    parsedurl = urllib.parse.urlparse(url)
+    if parsedurl.hostname == None:
+        parsedurl = urllib.parse.urlparse("ssh://" + url)
+
+    netloc = parsedurl.hostname
 
     candidates = dict(gen_candidates(local_passports, netloc))
 
