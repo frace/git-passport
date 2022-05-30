@@ -72,13 +72,15 @@ def url_exists(config, url):
     # Let's see if user defined IDs match remote.origin.url
     def gen_candidates(ids, url):
         for key, value in ids.items():
-            if value.get("service") == url:
+            service = value.get("service")
+            if not service:
+                continue
+            if service in url:
                 yield (key, value)
 
     local_passports = config["git_passports"]
-    netloc = urllib.parse.urlparse(url)[1]
 
-    candidates = dict(gen_candidates(local_passports, netloc))
+    candidates = dict(gen_candidates(local_passports, url))
 
     if len(candidates) >= 1:
         msg = """
